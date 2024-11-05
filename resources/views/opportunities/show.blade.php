@@ -3,6 +3,7 @@
 
 @section('content')
         <div class="row">
+            <h1>cooooooulll</h1>
             <div class="col-md-8 offset-md-2">
                 <h1>Opportunity Details</h1>
                 <style>
