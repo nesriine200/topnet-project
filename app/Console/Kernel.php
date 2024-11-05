@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         // Planifie la commande commissions:recalculate pour qu'elle s'exécute chaque mois
 //        $schedule->command('commissions:recalculate')->everyMinute();
-        $schedule->command('commissions:recalculate')->dailyAt("00:34");
+        $schedule->command('commissions:recalculate')->dailyAt("23:40");
     }
 
     /**
