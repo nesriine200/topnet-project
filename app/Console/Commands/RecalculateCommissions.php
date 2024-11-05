@@ -17,7 +17,7 @@ class RecalculateCommissions extends Command
     }
 
     public function handle()
-    {
+    {logger("nesrine");
         // Récupérer toutes les opportunités validées
         $opportunities = Opportunity::where('etat', 'valide')->get();
 
