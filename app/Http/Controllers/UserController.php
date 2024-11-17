@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Spatie\Permission\Traits\HasRoles;
+
 class UserController extends Controller
-{ use HasRoles;
+{
     public function index(Request $request)
     {
+        $chargeUsers = User::role('charge')->get();
+
         // Initialiser une requête pour la table User
         $query = User::query();
 
@@ -25,7 +28,7 @@ class UserController extends Controller
 
         // Vérifier si la requête est AJAX et retourner les données en JSON
         if ($request->ajax()) {
-            return response()->json($users->map(function($user) {
+            return response()->json($users->map(function ($user) {
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
@@ -36,22 +39,28 @@ class UserController extends Controller
         }
 
         // Retourner la vue avec les résultats si la requête n'est pas AJAX
-        return view('auth.index', compact('users'));
+        return view('users.index', compact('users', 'chargeUsers'));
     }
 
 
-    public function show()
+    public function show($id)
     {
-        // Vérifiez si l'utilisateur est authentifié
-        if (Auth::check()) {
-            // Récupérez l'utilisateur connecté
-            $user = Auth::user();
+        $user = User::findOrFail($id);
 
-            // Retournez la vue avec les détails de l'utilisateur
-            return view('auth.show', compact('user'));
-        }
+        // Retournez la vue avec les détails de l'utilisateur
+        return view('users.show', compact('user'));
+    }
 
-        // Redirigez vers la page de connexion si l'utilisateur n'est pas authentifié
-        return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
+    public function assign_apporteurs(Request $request, $userId)
+    {
+        $request->validate([
+            'apporteurs' => 'required|array',
+            'apporteurs.*' => 'exists:users,id',
+        ]);
+
+        $charge = User::findOrFail($userId);
+        $charge->apporteurs()->sync($request->input('apporteurs'));
+
+        return redirect()->back()->with('success', 'Apporteurs assignés avec succès.');
     }
 }

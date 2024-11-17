@@ -2,18 +2,14 @@
 
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OpportunityController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Chat;
-Route::get('/chat/{user}', function (User $user) {
-    return view('chat', compact('user'));
-})->name('chat');
-Route::get('/curl-test', function () {
-    return var_dump(curl_version());
-});
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,41 +20,56 @@ Route::get('/curl-test', function () {
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// Public Routes
 Route::get('/', function () {
     return view('welcome');
 });
-//Route::get('/chat',[Chat::class,'render'])->name('chat');
 
-Route::resource('offers', OfferController::class);
-Route::resource('opportunities', OpportunityController::class);
-Route::put('opportunities/{id}/validate', [OpportunityController::class, 'validateOpportunity'])->name('opportunities.validate');
-Route::get('opportunities/print/{id}', [OpportunityController::class, 'print'])->name('opportunities.print');
-Route::get('/index', [UserController::class, 'index'])->name('index');
-//Route::get('/home', [HomeController::class, 'index'])->name('index');
 Auth::routes();
-Route::get('/admin/dashboard', [opportunityController::class, 'statComissions'])->name('admin.dashboard');
 
+// Authenticated Routes
+Route::middleware(['auth'])->group(function () {
 
+    Route::middleware(['role:charge|apporteur'])->group(function () {
+        Route::resource('opportunities', OpportunityController::class);
+    });
 
-Route::get('/notifications/{id}', [NotificationController::class, 'show'])->name('notifications.show');
-Route::get('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
-Route::get('/admin/audit-logs', [AuditLogController::class, 'index'])->name('audit.logs');
+    // Home Dashboard
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('contracts', [App\Http\Controllers\OpportunityController::class, 'contract'])->name('contract');
-Route::group(['middleware'=>'auth'],function () {
-    Route::resource('users', App\Http\Controllers\UserController::class);
-    Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
-    Route::get('auth/show', [App\Http\Controllers\UserController::class, 'show'])->name('show');
-//    Route::resource('users', App\Http\Controllers\UserController::class);
+    // Opportunity Management
+    Route::put('opportunities/{id}/validate', [OpportunityController::class, 'validateOpportunity'])->name('opportunities.validate');
+    Route::get('opportunities/print/{id}', [OpportunityController::class, 'print'])->name('opportunities.print');
+    Route::get('contracts', [OpportunityController::class, 'contract'])->name('contract');
 
+    // Offer Management
+    Route::resource('offers', OfferController::class);
+
+    // User Management
+    Route::resource('users', UserController::class);
+    Route::post('user/{userId}/assign-apporteurs', [UserController::class, 'assign_apporteurs']);
+    Route::get('users/{userId}/delete', [UserController::class, 'destroy']);
+    Route::get('user/show', [UserController::class, 'show'])->name('show');
+    Route::get('/index', [UserController::class, 'index'])->name('index');
+
+    // Notification Management
+    Route::get('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+    Route::get('/notifications/{id}', [NotificationController::class, 'show'])->name('notifications.show');
+
+    // Audit Logs
+    Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit.logs');
+
+    // Permission and Role Management
     Route::resource('permissions', App\Http\Controllers\PermissionController::class);
     Route::get('permissions/{permissionId}/delete', [App\Http\Controllers\PermissionController::class, 'destroy']);
+
+    Route::resource('roles', App\Http\Controllers\RoleController::class);
+    Route::get('roles/{roleId}/delete', [App\Http\Controllers\RoleController::class, 'destroy']);
     Route::get('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'addPermissionToRole'])->name('addPermission');
     Route::put('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'givePermissionToRole']);
-    Route::resource('roles', App\Http\Controllers\RoleController::class);
 
-    Route::get('roles/{roleId}/delete', [App\Http\Controllers\RoleController::class, 'destroy'])->middleware('permission:delete role');
-
-
-
+    // Chat Feature
+    Route::get('/chat', [ChatController::class, 'index']);
+    Route::get('/chat/{user}', [ChatController::class, 'show']);
 });

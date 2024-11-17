@@ -22,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-
+        'profile_image',
     ];
 
     /**
@@ -43,4 +43,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function charges()
+    {
+        return $this->belongsToMany(User::class, 'charge_apporteur', 'apporteur_id', 'charge_id');
+    }
+
+    public function apporteurs()
+    {
+        return $this->belongsToMany(User::class, 'charge_apporteur', 'charge_id', 'apporteur_id');
+    }
 }

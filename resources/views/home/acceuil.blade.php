@@ -1,11 +1,6 @@
 @extends('home.index')
-@section('content')
-    <head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
-
-    </head>
+@section('dashboard-content')
     <div class="container">
         <div class="row justify-content-center">
             <!-- Statistiques des opportunités validées -->
@@ -16,16 +11,6 @@
                             <h5 class="m-0 me-2">Opportunités Validées</h5>
                             <small class="text-muted">Statistiques par apporteur</small>
                         </div>
-                        <div class="dropdown">
-                            <button class="btn p-0" type="button" id="opportunityStatistics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="opportunityStatistics">
-                                <a class="dropdown-item" href="javascript:void(0);">Select All</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                            </div>
-                        </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -35,8 +20,8 @@
                                 <span>Total Opportunités Validées</span>
                             </div>
                             <!-- Graphique en camembert -->
-                            <div id="opportunityPieChartContainer">
-                                <canvas id="opportunityPieChart" width="300" height="300"></canvas> <!-- Plus grand -->
+                            <div id="opportunityPieChartContainer" style="width:300px; height:300px">
+                                <canvas id="opportunityPieChart"></canvas>
                             </div>
                         </div>
                         <!-- Liste des opportunités validées par apporteur -->
@@ -44,9 +29,9 @@
                             @foreach ($names as $index => $name)
                                 <li class="d-flex mb-4 pb-1">
                                     <div class="avatar flex-shrink-0 me-3">
-                                <span class="avatar-initial rounded bg-label-primary">
-                                    <i class="bx bx-user"></i>
-                                </span>
+                                        <span class="avatar-initial rounded bg-label-primary">
+                                            <i class="bx bx-user"></i>
+                                        </span>
                                     </div>
                                     <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                         <div class="me-2">
@@ -67,7 +52,6 @@
             <!-- Statistiques des commissions -->
             <div class="col-md-6 col-lg-6 mb-4">
                 <div class="card h-100">
-
                     <div class="card-body px-0">
                         <div class="tab-content p-0">
                             <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
@@ -86,7 +70,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <canvas id="commissionChart" width="300" height="300"></canvas> <!-- Plus grand -->
+                                <canvas id="commissionChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -95,7 +79,10 @@
         </div>
     </div>
 
+
     <!-- Chart.js script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         // Graphique des opportunités validées
         var ctxPie = document.getElementById('opportunityPieChart').getContext('2d');
@@ -166,6 +153,4 @@
             }
         });
     </script>
-
-
 @endsection

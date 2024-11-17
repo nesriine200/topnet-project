@@ -1,26 +1,43 @@
 <?php
+
 namespace App\Livewire;
 
 use Livewire\Component;
 use App\Events\MessageSent;
-use App\Models\Message; // Assurez-vous d'avoir un modèle Message
+use App\Models\Message;
 use App\Models\User;
+
 class Chat extends Component
 {
+    // Listeners to handle events
     protected $listeners = ['MessageSent' => 'refreshMessages'];
 
+    // Public properties
     public $message;
-    public $messages = []; // Initialisez comme un tableau vide
+    public $messages = [];
     public $userId;
     public $recipientName;
-    // La méthode mount pour récupérer l'ID de l'utilisateur
+
+    /**
+     * Mount method to initialize the component with user data.
+     *
+     * @param  int  $userId
+     * @return void
+     */
     public function mount($userId)
     {
         $this->userId = $userId;
         $this->recipientName = User::find($this->userId)->name ?? 'Utilisateur inconnu';
-        // Charger les messages ici
+
+        // Load messages when the component is mounted
         $this->refreshMessages();
     }
+
+    /**
+     * Get listeners for the component.
+     *
+     * @return array
+     */
     public function getListeners()
     {
         return [
@@ -28,10 +45,14 @@ class Chat extends Component
         ];
     }
 
+    /**
+     * Refresh the messages based on the userId and the authenticated user.
+     *
+     * @return void
+     */
     public function refreshMessages()
     {
-
-        // Charger les messages ici
+        // Fetch messages exchanged between the authenticated user and the recipient
         $this->messages = Message::where(function ($query) {
             $query->where('from_user_id', $this->userId)
                 ->where('to_user_id', auth()->id());
@@ -42,27 +63,39 @@ class Chat extends Component
             })
             ->orderBy('created_at', 'asc')
             ->get();
-//        dd($this->messages);
     }
 
+    /**
+     * Send the message, broadcast it, and save it in the database.
+     *
+     * @return void
+     */
     public function sendMessage()
     {
-        // Émet l'événement avec le message saisi
+        // Broadcast the event with the message content
         broadcast(new MessageSent($this->message))->toOthers();
 
-        // Sauvegarde le message dans la base de données si nécessaire
-        Message::create(['content' => $this->message, 'from_user_id' => auth()->user()->id, 'to_user_id' => $this->userId]);
+        // Save the message in the database
+        Message::create([
+            'content' => $this->message,
+            'from_user_id' => auth()->user()->id,
+            'to_user_id' => $this->userId
+        ]);
 
-        // Réinitialise le message après l’envoi
+        // Reset the message input field after sending
         $this->message = '';
 
-        // Recharge les messages (optionnel, selon ta logique)
+        // Optionally reload the messages after sending
         $this->refreshMessages();
     }
 
+    /**
+     * Render the chat view.
+     *
+     * @return \Illuminate\View\View
+     */
     public function render()
-    {   logger("render");
-        return view('livewire.chat'); // Modifie le nom du fichier de vue
-
+    {
+        return view('livewire.chat');
     }
 }

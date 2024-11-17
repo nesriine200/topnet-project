@@ -7,13 +7,13 @@ use  Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
-//    public function __construct()
-//    {
-//        $this-> middleware('permission:view permission', ['only' => ['index']]);
-//        $this->middleware('permission:create permission', ['only' => ['create','store']]);
-//        $this->middleware('permission:update permission', ['only' => ['update','edit']]);
-//        $this->middleware('permission:delete permission', ['only' => ['destroy']]);
-//    }
+    //    public function __construct()
+    //    {
+    //        $this-> middleware('permission:view permission', ['only' => ['index']]);
+    //        $this->middleware('permission:create permission', ['only' => ['create','store']]);
+    //        $this->middleware('permission:update permission', ['only' => ['update','edit']]);
+    //        $this->middleware('permission:delete permission', ['only' => ['destroy']]);
+    //    }
 
     public function index()
     {
@@ -40,7 +40,7 @@ class PermissionController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect('permissions')->with('status','Permission Created Successfully');
+        return redirect('permissions')->with('status', 'Permission Created Successfully');
     }
     public function edit(Permission $permission)
     {
@@ -52,7 +52,7 @@ class PermissionController extends Controller
             'name' => [
                 'required',
                 'string',
-                'unique:permissions,name,'.$permission->id
+                'unique:permissions,name,' . $permission->id
             ]
         ]);
 
@@ -60,13 +60,12 @@ class PermissionController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect('permissions')->with('status','Permission Updated Successfully');
+        return redirect('permissions')->with('status', 'Permission Updated Successfully');
     }
     public function destroy($permissionId)
     {
         $permission = Permission::find($permissionId);
         $permission->delete();
-        return redirect('permissions')->with('status','Permission Deleted Successfully');
+        return redirect('permissions')->with('status', 'Permission Deleted Successfully');
     }
-
-   }
+}

@@ -4,7 +4,6 @@
 ******************************************************************************/
 
 .menu .app-brand.demo {
-  height: 64px;
   margin-top: 12px;
 }
 
@@ -104,4 +103,15 @@
 .layout-demo-info {
   text-align: center;
   margin-top: 1rem;
+}
+
+.unread-notification {
+  background-color: #E7F3FF;
+  /* Light blue like Facebook */
+}
+
+/* Background color for read notifications */
+.read-notification {
+  background-color: #ffffff;
+  /* White for read notifications */
 }

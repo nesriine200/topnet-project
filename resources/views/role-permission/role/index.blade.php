@@ -1,59 +1,59 @@
 @extends('home.index')
-@section('content')
-{{--    <div class="container mt-5">--}}
-{{--        <a href="{{ url('roles') }}" class="btn btn-primary mx-1">Roles</a>--}}
-{{--        <a href="{{ url('permissions') }}" class="btn btn-info mx-1">Permissions</a>--}}
-{{--        <a href="{{ url('users') }}" class="btn btn-warning mx-1">Users</a>--}}
-{{--    </div>--}}
-{{--@include('role-permission.nav-links')--}}
-<div class="container mt-2">
-    <div class="row">
-        <div class="col-md-12">
 
-            @if (session('status'))
-                <div class="alert alert-success">{{ session('status') }}</div>
-            @endif
+@section('dashboard-content')
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{ route('roles.create') }}" class="btn btn-primary mb-3">Créer un Rôle</a>
 
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h4>Roles
+                {{-- Roles Card --}}
+                <div class="card mt-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4>Roles</h4>
                         @can('create role')
-                            <a href="{{ url('roles/create') }}" class="btn btn-primary float-end">Add Role</a>
+                            <a href="{{ route('roles.create') }}" class="btn btn-primary">Add Role</a>
                         @endcan
-                    </h4>
-                </div>
-                <div class="card-body">
+                    </div>
+                    <div class="card-body">
 
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-{{--                            <th>Id</th>--}}
-                            <th>Name</th>
-                            <th width="40%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($roles as $role)
-                            <tr>
-{{--                                <td>{{ $role->id }}</td>--}}
-                                <td>{{ $role->name }}</td>
-                                <td>
-                                    <a href="{{ url('roles/'.$role->id.'/give-permissions') }}" class="btn btn-success">give permissions</a>
-                                    <a href="{{ url('roles/'.$role->id.'/edit') }}" class="btn btn-success">Edit</a>
-                                    <a href="{{ url('roles/'.$role->id.'/delete') }}" class="btn btn-danger mx-2">Delete</a>
+                        {{-- Roles Table --}}
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th width="40%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($roles as $role)
+                                    <tr>
+                                        <td>{{ $role->show_as }}</td>
+                                        <td>
+                                            <a href="{{ url('roles/' . $role->id . '/give-permissions') }}"
+                                                class="btn btn-success btn-sm">
+                                                Affecter les permissions
+                                            </a>
+                                            <a
+                                                href="{{ url('roles/' . $role->id . '/edit') }}"class="btn btn-secondary btn-sm">
+                                                Modifier
+                                            </a>
+                                            <a href="{{ url('roles/' . $role->id . '/delete') }}"
+                                                class="btn btn-danger btn-sm">
+                                                Supprimer
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="2" class="text-center">No roles available.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
 
-
-
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
-

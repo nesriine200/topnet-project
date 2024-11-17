@@ -1,28 +1,22 @@
-
-{{--@section('content')--}}
 @extends('home.index')
-@section('content')
+@section('dashboard-content')
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <h1>Opportunities</h1>
                 <a href="{{ route('opportunities.create') }}" class="btn btn-primary mb-3">Create Opportunity</a>
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                {{--                <form action="{{ route('opportunities.index') }}" method="GET">--}}
-                {{--                    <div class="input-group">--}}
-                {{--                        <input type="text" name="search" class="form-control" placeholder="Rechercher une opportunité" value="{{ request()->query('search') }}">--}}
-                {{--                        <div class="input-group-append">--}}
-                {{--                            <button type="submit" class="btn btn-primary">Rechercher</button>--}}
-                {{--                        </div>--}}
-                {{--                    </div>--}}
-                {{--                </form>--}}
+                {{--                <form action="{{ route('opportunities.index') }}" method="GET"> --}}
+                {{--                    <div class="input-group"> --}}
+                {{--                        <input type="text" name="search" class="form-control" placeholder="Rechercher une opportunité" value="{{ request()->query('search') }}"> --}}
+                {{--                        <div class="input-group-append"> --}}
+                {{--                            <button type="submit" class="btn btn-primary">Rechercher</button> --}}
+                {{--                        </div> --}}
+                {{--                    </div> --}}
+                {{--                </form> --}}
                 <form action="{{ route('opportunities.index') }}" method="GET" id="search-form">
                     <div class="input-group mb-3">
-                        <input type="text" name="search" id="search" class="form-control" placeholder="Rechercher une opportunité">
+                        <input type="text" name="search" id="search" class="form-control"
+                            placeholder="Rechercher une opportunité">
                     </div>
                 </form>
 
@@ -31,35 +25,37 @@
                     <div class="card p-2">
                         <table class="table table-bordered">
                             <thead>
-                            <tr>
-{{--                                <th>ID</th>--}}
-                                <th>Client</th>
-                                <th>Commissions</th>
-                                <th>Actions</th>
-                            </tr>
+                                <tr>
+                                    {{--                                <th>ID</th> --}}
+                                    <th>Client</th>
+                                    <th>Commissions</th>
+                                    <th>Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach ($opportunities as $opportunity)
-                                <tr>
-{{--                                    <td>{{ $opportunity->id }}</td>--}}
-                                    <td>{{ $opportunity->client }}</td>
+                                @foreach ($opportunities as $opportunity)
+                                    <tr>
+                                        {{--                                    <td>{{ $opportunity->id }}</td> --}}
+                                        <td>{{ $opportunity->client }}</td>
 
 
 
 
-                                    <td>{{ $opportunity->commissions }}</td>
-                                    <td>
-                                        <a href="{{ route('opportunities.show', $opportunity->id) }}" class="btn btn-info btn-sm">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
+                                        <td>{{ $opportunity->commissions }}</td>
+                                        <td>
+                                            <a href="{{ route('opportunities.show', $opportunity->id) }}"
+                                                class="btn btn-info btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
 
-                                        <a href="{{ route('opportunities.print', $opportunity->id) }}" class="btn btn-secondary btn-sm">
-                                            <i class="fas fa-print"></i>
-                                        </a>
+                                            <a href="{{ route('opportunities.print', $opportunity->id) }}"
+                                                class="btn btn-secondary btn-sm">
+                                                <i class="fas fa-print"></i>
+                                            </a>
 
-                                    </td>
-                                </tr>
-                            @endforeach
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

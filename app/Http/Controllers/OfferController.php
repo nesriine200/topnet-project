@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Offer;
 use Illuminate\Http\Request;
 
@@ -31,11 +32,11 @@ class OfferController extends Controller
     }
 
     // Liste toutes les offres
-//    public function index()
-//    {
-//        $offers = Offer::all();
-//        return view('offers.index', compact('offers'));
-//    }
+    //    public function index()
+    //    {
+    //        $offers = Offer::all();
+    //        return view('offers.index', compact('offers'));
+    //    }
 
     // Affiche le formulaire de création
     public function create()
@@ -89,5 +90,4 @@ class OfferController extends Controller
         $offer->delete();
         return redirect()->route('offers.index')->with('success', 'Offre supprimée avec succès.');
     }
-
 }

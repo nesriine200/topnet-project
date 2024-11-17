@@ -39,6 +39,4 @@ class OpportunityValidated extends Notification
             ];
         }
     }
-
-
 }

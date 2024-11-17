@@ -1,12 +1,9 @@
 @extends('home.index')
-@section('content')
+
+@section('dashboard-content')
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
-
-                @if (session('status'))
-                    <div class="alert alert-success">{{ session('status') }}</div>
-                @endif
 
                 <div class="card">
                     <div class="card-header">
@@ -16,13 +13,13 @@
                     </div>
                     <div class="card-body">
 
-                        <form action="{{ url('roles/'.$role->id.'/give-permissions') }}" method="POST">
+                        <form action="{{ url('roles/' . $role->id . '/give-permissions') }}" method="POST">
                             @csrf
                             @method('PUT')
 
                             <div class="mb-3">
                                 @error('permission')
-                                <span class="text-danger">{{ $message }}</span>
+                                    <span class="text-danger">{{ $message }}</span>
                                 @enderror
 
                                 <label for="">Permissions</label>
@@ -31,12 +28,8 @@
                                     @foreach ($permissions as $permission)
                                         <div class="col-md-2">
                                             <label>
-                                                <input
-                                                    type="checkbox"
-                                                    name="permission[]"
-                                                    value="{{ $permission->name }}"
-                                                    {{ in_array($permission->id, $rolePermissions) ? 'checked':'' }}
-                                                />
+                                                <input type="checkbox" name="permission[]" value="{{ $permission->name }}"
+                                                    {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }} />
                                                 {{ $permission->name }}
                                             </label>
                                         </div>
@@ -54,4 +47,3 @@
         </div>
     </div>
 @endsection
-

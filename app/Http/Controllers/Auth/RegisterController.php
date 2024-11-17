@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use http\Env\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use  Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
+
 class RegisterController extends Controller
 {
     /*
@@ -70,23 +71,29 @@ class RegisterController extends Controller
      * @return \App\Models\User
      */
 
-
     protected function create(array $data)
     {
-        // Traitement de l'image
-//    $imagePath = $data['profile_image'] ? $data['profile_image']->store('images', 'public') : null;
+        // Create the user
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
 
-    // Création de l'utilisateur
-    $user = User::create([
-        'name' => $data['name'],
-        'email' => $data['email'],
-        'password' => Hash::make($data['password']),
-//        'profile_image' => $imagePath,
-    ]);
+        // Assign the selected role
+        $user->assignRole($data['role']);
 
-    // Assigner le rôle sélectionné
-    $user->assignRole($data['role']);
+        // Handle profile image upload
+        if (isset($data['profile_image']) && $data['profile_image']->isValid()) {
+            // Store the uploaded image and get its path
+            $imagePath = $data['profile_image']->store('profile_images', 'public');
 
-    return $user;
-}}
+            // Update the user's profile image path in the database
+            $user->update([
+                'profile_image' => $imagePath,
+            ]);
+        }
 
+        return $user;
+    }
+}
