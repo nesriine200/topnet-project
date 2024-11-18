@@ -62,9 +62,9 @@
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                 data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
-                                    <img src="{{ $user->profile_image ? asset('storage/' . $user->profile_image) : 'https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg' }}"
-                                        alt="{{ $user->name }}" class="rounded-circle" width="50" height="50"
-                                        style="object-fit: cover;">
+                                    <img src="{{ auth()->user()->profile_image ? asset('storage/' . $user->profile_image) : 'https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg' }}"
+                                        --}} alt="{{ auth()->user()->name }}" class="rounded-circle" width="50"
+                                        height="50" style="object-fit: cover;">
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -72,9 +72,9 @@
                                     <a class="dropdown-item" href="#">
                                         <div class="d-flex">
                                             <div class="avatar avatar-online">
-                                                <img src="{{ $user->profile_image ? asset('storage/' . $user->profile_image) : 'https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg' }}"
-                                                    alt="{{ $user->name }}" class="rounded-circle" width="50"
-                                                    height="50" style="object-fit: cover;">
+                                                <img src="{{ auth()->user()->profile_image ? asset('storage/' . $user->profile_image) : 'https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg' }}"
+                                                    alt="{{ auth()->user()->name }}" class="rounded-circle"
+                                                    width="50" height="50" style="object-fit: cover;">
                                             </div>
                                             <div class="d-flex flex-column">
                                                 <div class="mb-2">
@@ -83,7 +83,7 @@
                                                 <div>
                                                     <small class="text-muted">
                                                         <span class="badge bg-primary">
-                                                            {{ $user->roles?->first()?->show_as }}
+                                                            {{ auth()->user()->roles?->first()?->show_as }}
                                                         </span>
                                                     </small>
                                                 </div>
@@ -97,9 +97,9 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ url('/user/show') }}" class="dropdown-item">
+                                    <a href="{{ url('/users' . $user->id . '/show') }}" class="dropdown-item">
                                         <i class="bx bx-user me-2"></i>
-                                        <span class="align-middle">My Profile</span>
+                                        <span class="align-middle">Myddd Profile</span>
                                     </a>
                                 </li>
                                 <li>
