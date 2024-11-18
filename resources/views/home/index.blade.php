@@ -72,7 +72,7 @@
                                     <a class="dropdown-item" href="#">
                                         <div class="d-flex">
                                             <div class="avatar avatar-online">
-                                                <img src="{{ auth()->user()->profile_image ? asset('storage/' . $user->profile_image) : 'https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg' }}"
+                                                <img src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : 'https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg' }}"
                                                     alt="{{ auth()->user()->name }}" class="rounded-circle"
                                                     width="50" height="50" style="object-fit: cover;">
                                             </div>
