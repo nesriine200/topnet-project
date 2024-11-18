@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', UserController::class);
     Route::post('user/{userId}/assign-apporteurs', [UserController::class, 'assign_apporteurs']);
     Route::get('users/{userId}/delete', [UserController::class, 'destroy']);
-    // Route::get('users/{id}/show', [UserController::class, 'show'])->name('show');
+    Route::get('users/{id}/show', [UserController::class, 'show'])->name('show');
     Route::get('/index', [UserController::class, 'index'])->name('index');
 
     // Notification Management
