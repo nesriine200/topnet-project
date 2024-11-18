@@ -97,7 +97,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ url('/users' . auth()->user()->id . '/show') }}" class="dropdown-item">
+                                    <a href="{{ url('/user/' . auth()->user()->id . '/show') }}" class="dropdown-item">
                                         <i class="bx bx-user me-2"></i>
                                         <span class="align-middle">Myddd Profile</span>
                                     </a>
