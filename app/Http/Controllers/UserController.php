@@ -79,4 +79,11 @@ class UserController extends Controller
         $user->syncRoles([$request->role]); // Affecte le rôle
         return redirect()->route('users.index')->with('success', 'Rôle assigné avec succès.');
     }
+    public function showAccountManagers()
+    {
+        // Récupère les utilisateurs ayant le rôle "chargé de compte"
+        $users = User::role('Charge')->get(); // Méthode "role" de Spatie
+        // Retourne la vue avec les utilisateurs
+        return view('users.account-managers', compact('users'));
+    }
 }

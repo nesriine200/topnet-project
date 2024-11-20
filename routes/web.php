@@ -7,7 +7,6 @@ use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OpportunityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('offers', OfferController::class);
 
     // User Management
+    Route::get('/users/account-managers', [UserController::class, 'showAccountManagers'])->name('users.accountManagers');
     Route::resource('users', UserController::class);
     Route::post('user/{userId}/assign-apporteurs', [UserController::class, 'assign_apporteurs']);
     Route::get('users/{userId}/delete', [UserController::class, 'destroy']);
@@ -55,6 +55,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/index', [UserController::class, 'index'])->name('index');
     Route::get('/users/{user}/roles', [UserController::class, 'showRoles'])->name('users.roles');
     Route::post('/users/{user}/roles', [UserController::class, 'assignRole'])->name('users.assignRole');
+    Route::get('/users/account-managers', [UserController::class, 'showAccountManagers'])->name('users.accountManagers');
+
+
 
     // Notification Management
     Route::get('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');

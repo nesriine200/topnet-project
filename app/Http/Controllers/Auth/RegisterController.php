@@ -80,8 +80,8 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        // Assign the selected role
-        // $user->assignRole($data['role']);
+        // Assign role
+        $user->assignRole('apporteur');
 
         // Handle profile image upload
         if (isset($data['profile_image']) && $data['profile_image']->isValid()) {
