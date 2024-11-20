@@ -41,6 +41,11 @@
                                     title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                <a href="{{ route('users.roles', $user->id) }}" class="btn btn-info btn-sm"
+                                    title="Affecter un rôle">
+                                    <i class="fas fa-user-tag"></i>
+                                </a>
+
                                 <a href="javascript:void(0);" class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#assignApporteursModal" title="Assigner des apporteurs"
                                     data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}">

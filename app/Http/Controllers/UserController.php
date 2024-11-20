@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\Role;
 
 class UserController extends Controller
 {
@@ -62,5 +63,20 @@ class UserController extends Controller
         $charge->apporteurs()->sync($request->input('apporteurs'));
 
         return redirect()->back()->with('success', 'Apporteurs assignés avec succès.');
+    }
+    public function showRoles(User $user)
+    {
+        $roles = Role::all(); // Récupère tous les rôles
+        return view('users.assign-role', compact('user', 'roles'));
+    }
+
+    public function assignRole(Request $request, User $user)
+    {
+        $request->validate([
+            'role' => 'required|exists:roles,name', // Valide que le rôle existe
+        ]);
+
+        $user->syncRoles([$request->role]); // Affecte le rôle
+        return redirect()->route('users.index')->with('success', 'Rôle assigné avec succès.');
     }
 }

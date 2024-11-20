@@ -53,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('users/{userId}/delete', [UserController::class, 'destroy']);
     // Route::get('user/{id}/show', [UserController::class, 'show'])->name('show');
     Route::get('/index', [UserController::class, 'index'])->name('index');
+    Route::get('/users/{user}/roles', [UserController::class, 'showRoles'])->name('users.roles');
+    Route::post('/users/{user}/roles', [UserController::class, 'assignRole'])->name('users.assignRole');
 
     // Notification Management
     Route::get('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
