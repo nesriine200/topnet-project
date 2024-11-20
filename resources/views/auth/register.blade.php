@@ -98,11 +98,11 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        {{-- <div class="row mb-3">
                             <label for="role"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Select Role') }}</label>
+                                class="col-md-4 col-form-label text-md-end">{{ __('Select Role') }}</label> --}}
 
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <select id="role" class="form-control @error('role') is-invalid @enderror"
                                     name="role" required>
                                     @foreach ($roles as $role)
@@ -116,24 +116,24 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="d-flex justify-content-start align-items-center">
-                                    <p class="mb-0 me-3">You have already an account ?</p>
-                                    <a href="{{ url('/login') }}" class="btn btn-secondary">Login</a>
+                            <div class="row mb-3">
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        {{ __('Register') }}
+                                    </button>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="row mb-0">
+                                <div class="col-md-6 offset-md-4">
+                                    <div class="d-flex justify-content-start align-items-center">
+                                        <p class="mb-0 me-3">You have already an account ?</p>
+                                        <a href="{{ url('/login') }}" class="btn btn-secondary">Login</a>
+                                    </div>
+                                </div>
+                            </div>
                     </form>
                 </div>
             </div>

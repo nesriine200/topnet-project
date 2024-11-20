@@ -81,7 +81,7 @@ class RegisterController extends Controller
         ]);
 
         // Assign the selected role
-        $user->assignRole($data['role']);
+        // $user->assignRole($data['role']);
 
         // Handle profile image upload
         if (isset($data['profile_image']) && $data['profile_image']->isValid()) {
