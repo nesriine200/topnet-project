@@ -79,4 +79,10 @@
             <div data-i18n="Tables">Chat</div>
         </a>
     </li>
+    <li class="menu-item">
+        <a href="{{ url('/users/account-managers') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-chat"></i>
+            <div data-i18n="Tables">Affectation des chargés</div>
+        </a>
+    </li>
 </aside>

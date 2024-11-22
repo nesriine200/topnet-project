@@ -63,6 +63,10 @@ class UserController extends Controller
         $charge->apporteurs()->sync($request->input('apporteurs'));
 
         return redirect()->back()->with('success', 'Apporteurs assignés avec succès.');
+        // return redirect()->back()->with([
+        //     'success' => 'Apporteurs assignés avec succès.',
+        //     'charge' => $charge
+        // ]);
     }
     public function showRoles(User $user)
     {
@@ -81,9 +85,11 @@ class UserController extends Controller
     }
     public function showAccountManagers()
     {
+        $chargeUsers = User::role('charge')->get();
+
         // Récupère les utilisateurs ayant le rôle "chargé de compte"
         $users = User::role('Charge')->get(); // Méthode "role" de Spatie
         // Retourne la vue avec les utilisateurs
-        return view('users.account-managers', compact('users'));
+        return view('users.account-managers', compact('users', 'chargeUsers'));
     }
 }

@@ -46,11 +46,11 @@
                                     <i class="fas fa-user-tag"></i>
                                 </a>
 
-                                <a href="javascript:void(0);" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                {{-- <a href="javascript:void(0);" class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#assignApporteursModal" title="Assigner des apporteurs"
                                     data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}">
                                     <i class="fas fa-user-plus"></i>
-                                </a>
+                                </a> --}}
 
 
                                 <!-- Delete Form -->
@@ -71,7 +71,7 @@
             </table>
         </div>
 
-        <!-- Modal -->
+        {{-- <!-- Modal -->
         <div class="modal fade" id="assignApporteursModal" tabindex="-1" aria-labelledby="assignApporteursModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -100,10 +100,10 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection
-
+{{--
 @push('scripts')
     <!-- Search Script -->
     <script type="text/javascript">
@@ -159,4 +159,4 @@
             });
         });
     </script>
-@endpush
+@endpush --}}
