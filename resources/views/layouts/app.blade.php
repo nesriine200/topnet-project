@@ -86,8 +86,14 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/assets/css/chat.min.css">
     <script>
         var botmanWidget = {
-            aboutText: 'ssdsd',
-            introMessage: "✋ Hi! I'm"
+            aboutText: '',
+            introMessage: "✋ Hi! I'm here to assist you with Topnet queries.",
+            title: 'Topnet', // Title of the widget
+            mainColor: '#ffffff', // White color for the title background
+            bubbleBackground: '#007bff', // Adjust for a contrasting bubble color
+            headerTextColor: '#000000', // Black text color for contrast
+            bubbleAvatarUrl: 'https://your-logo-url.com/logo.png', // Optional: Add your Topnet logo
+            aboutLink: 'https://www.topnet.tn', // Optional: Add a link to Topnet's website
         };
     </script>
     <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
