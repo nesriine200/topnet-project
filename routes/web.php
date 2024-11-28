@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuditLogController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\BotManController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OpportunityController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,12 +20,14 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-*/
+ */
 
 // Public Routes
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
 
 Auth::routes();
 
@@ -56,8 +59,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/{user}/roles', [UserController::class, 'showRoles'])->name('users.roles');
     Route::post('/users/{user}/roles', [UserController::class, 'assignRole'])->name('users.assignRole');
     Route::get('/users/account-managers', [UserController::class, 'showAccountManagers'])->name('users.accountManagers');
-
-
 
     // Notification Management
     Route::get('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
