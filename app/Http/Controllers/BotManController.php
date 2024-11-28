@@ -17,7 +17,6 @@ class BotManController extends Controller
 
             // Predefined responses for common user queries
             $predefinedResponses = [
-                'Rouza' => 'Je t\'aime ma Nousa',
                 'access offers' => 'To access our offers, visit the "Offers" section in our app or check our website: https://www.topnet.tn/offers.',
                 'contact support' => 'You can contact our support team via phone at 1234-5678 or by email at support@topnet.tn.',
                 'access contracts' => 'You can view your contracts in the "Contracts" section of the app or by logging into your Topnet account online.',
