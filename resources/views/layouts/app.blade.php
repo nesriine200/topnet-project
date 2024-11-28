@@ -92,7 +92,6 @@
             mainColor: '#ffffff', // White color for the title background
             bubbleBackground: '#007bff', // Adjust for a contrasting bubble color
             headerTextColor: '#000000', // Black text color for contrast
-            bubbleAvatarUrl: 'https://your-logo-url.com/logo.png', // Optional: Add your Topnet logo
             aboutLink: 'https://www.topnet.tn', // Optional: Add a link to Topnet's website
         };
     </script>
