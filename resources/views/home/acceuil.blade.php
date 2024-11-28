@@ -48,34 +48,35 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Statistiques des commissions -->
-            <div class="col-md-6 col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-body px-0">
-                        <div class="tab-content p-0">
-                            <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
-                                <div class="d-flex p-4 pt-3">
-                                    <div class="avatar flex-shrink-0 me-3">
-                                        <img src="../assets/img/icons/unicons/wallet.png" alt="Commissions" />
-                                    </div>
-                                    <div>
-                                        <small class="text-muted d-block">Total Commissions</small>
-                                        <div class="d-flex align-items-center">
-                                            <h6 class="mb-0 me-1">{{ $totalCommission }}</h6>
-                                            <small class="text-success fw-semibold">
-                                                <i class="bx bx-chevron-up"></i>
-                                                {{ round($percentageChange, 2) }}%
-                                            </small>
+            @hasanyrole('apporteur')
+                <!-- Statistiques des commissions -->
+                <div class="col-md-6 col-lg-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body px-0">
+                            <div class="tab-content p-0">
+                                <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
+                                    <div class="d-flex p-4 pt-3">
+                                        <div class="avatar flex-shrink-0 me-3">
+                                            <img src="../assets/img/icons/unicons/wallet.png" alt="Commissions" />
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Total Commissions</small>
+                                            <div class="d-flex align-items-center">
+                                                <h6 class="mb-0 me-1">{{ $totalCommission }}</h6>
+                                                <small class="text-success fw-semibold">
+                                                    <i class="bx bx-chevron-up"></i>
+                                                    {{ round($percentageChange, 2) }}%
+                                                </small>
+                                            </div>
                                         </div>
                                     </div>
+                                    <canvas id="commissionChart"></canvas>
                                 </div>
-                                <canvas id="commissionChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endhasanyrole
         </div>
     </div>
 

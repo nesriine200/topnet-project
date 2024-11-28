@@ -42,47 +42,60 @@
     </li>
 
     <!-- Users -->
-    <li class="menu-item">
-        <a href="{{ url('/users') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-user"></i>
-            <div data-i18n="Tables">Utilisateurs</div>
-        </a>
-    </li>
-
+    @hasrole('admin')
+        <li class="menu-item">
+            <a href="{{ url('/users') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="Tables">Utilisateurs</div>
+            </a>
+        </li>
+    @endhasrole
     <!-- Roles Menu -->
-    <li class="menu-item">
-        <a href="{{ url('/roles') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-lock"></i>
-            <div data-i18n="Tables">Rôles</div>
-        </a>
-    </li>
+    @hasrole('admin')
+        <li class="menu-item">
+            <a href="{{ url('/roles') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-lock"></i>
+                <div data-i18n="Tables">Rôles</div>
+            </a>
+        </li>
+    @endhasrole
 
     <!-- Permissions Menu -->
-    <li class="menu-item">
-        <a href="{{ url('/permissions') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-shield"></i>
-            <div data-i18n="Tables">Permissions</div>
-        </a>
-    </li>
-
+    @hasrole('admin')
+        <li class="menu-item">
+            <a href="{{ url('/permissions') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-shield"></i>
+                <div data-i18n="Tables">Permissions</div>
+            </a>
+        </li>
+    @endhasrole
     <!-- Audit Logs Menu -->
-    <li class="menu-item">
-        <a href="{{ url('/audit-logs') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-search"></i>
-            <div data-i18n="Tables">Audit Logs</div>
-        </a>
-    </li>
-
+    @hasanyrole('charge|admin')
+        <li class="menu-item">
+            <a href="{{ url('/audit-logs') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-search"></i>
+                <div data-i18n="Tables">Audit Logs</div>
+            </a>
+        </li>
+    @endhasanyrole
     <li class="menu-item">
         <a href="{{ url('/chat') }}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-chat"></i>
             <div data-i18n="Tables">Chat</div>
         </a>
     </li>
-    <li class="menu-item">
-        <a href="{{ url('/users/account-managers') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-chat"></i>
-            <div data-i18n="Tables">Affectation des chargés</div>
-        </a>
-    </li>
+    @hasrole('admin')
+        <li class="menu-item">
+            <a href="{{ url('/users/account-managers') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-chat"></i>
+                <div data-i18n="Tables">Affectation des chargés</div>
+            </a>
+        </li>
+    @endhasrole
+  <li class="menu-item">
+            <a href="{{ url('contracts') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-chat"></i>
+                <div data-i18n="Tables">les Contrats</div>
+            </a>
+        </li>
 </aside>

@@ -16,8 +16,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         // Planifie la commande commissions:recalculate pour qu'elle s'exécute chaque mois
-//        $schedule->command('commissions:recalculate')->everyMinute();
-        $schedule->command('commissions:recalculate')->weeklyOn(4,"10:00");
+        // $schedule->command('commissions:recalculate')->everyMinute();
+        $schedule->command('commissions:recalculate')->weeklyOn(4, "10:00");
     }
 
     /**
@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

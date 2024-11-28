@@ -71,8 +71,6 @@ class BotManController extends Controller
             if (array_key_exists($message, $predefinedResponses)) {
                 $response = $predefinedResponses[$message];
                 $botman->reply($response);
-            } elseif ($message === 'hi') {
-                $this->askName($botman); // Handle "hi" with a custom flow
             } else {
                 // Default to Hugging Face for dynamic responses
                 $response = $this->askHuggingFace($message);
@@ -85,11 +83,12 @@ class BotManController extends Controller
 
     private function askHuggingFace($message)
     {
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer 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',
-        ])->post('https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill', [
-            'inputs' => "Please be professional, and answer professionally to this: " . $message,
-        ]);
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders([
+                'Authorization' => 'Bearer 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',
+            ])->post('https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill', [
+                'inputs' => "Please be professional, and answer professionally to this: " . $message,
+            ]);
 
         if ($response->ok() && isset($response->json()[0]['generated_text'])) {
             return $response->json()[0]['generated_text'];

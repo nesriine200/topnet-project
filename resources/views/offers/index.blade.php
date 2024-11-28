@@ -31,15 +31,17 @@
                             <td>{{ $offer->details }}</td>
                             <td>
                                 <a href="{{ route('offers.show', $offer->id) }}" class="btn btn-info">Voir</a>
-                                <a href="{{ route('offers.edit', $offer->id) }}" class="btn btn-warning">Modifier</a>
-                                <form action="{{ route('offers.destroy', $offer->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger"
-                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette offre ?');">
-                                        Supprimer
-                                    </button>
-                                </form>
+                                @hasanyrole('charge|admin')
+                                    <a href="{{ route('offers.edit', $offer->id) }}" class="btn btn-warning">Modifier</a>
+                                    <form action="{{ route('offers.destroy', $offer->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette offre ?');">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                @endhasanyrole
                             </td>
                         </tr>
                     @endforeach
