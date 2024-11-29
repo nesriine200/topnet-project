@@ -14,24 +14,24 @@
                     <div class="card-body">
                         <!-- Boutons de validation/invalidation -->
                         @if ($opportunity->etat == 'non valide')
-                            @hasanyrole('charge|admin')
-                                <div class="button-group mb-3">
-                                    <form action="{{ route('opportunities.validate', $opportunity->id) }}" method="POST" class="d-inline-block">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" name="action" value="valide" class="btn btn-success btn-lg btn-custom">
-                                            <i class="fas fa-check"></i> Valider
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('opportunities.validate', $opportunity->id) }}" method="POST" class="d-inline-block">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" name="action" value="non valide" class="btn btn-danger btn-lg btn-custom">
-                                            <i class="fas fa-times"></i> Invalider
-                                        </button>
-                                    </form>
-                                </div>
-                            @endhasanyrole
+                            {{-- @hasanyrole('charge|admin') --}}
+                            <div class="button-group mb-3">
+                                <form action="{{ route('opportunities.validate', $opportunity->id) }}" method="POST" class="d-inline-block">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" name="action" value="valide" class="btn btn-success btn-lg btn-custom">
+                                        <i class="fas fa-check"></i> Valider
+                                    </button>
+                                </form>
+                                <form action="{{ route('opportunities.validate', $opportunity->id) }}" method="POST" class="d-inline-block">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" name="action" value="non valide" class="btn btn-danger btn-lg btn-custom">
+                                        <i class="fas fa-times"></i> Invalider
+                                    </button>
+                                </form>
+                            </div>
+                            {{-- @endhasanyrole --}}
                         @endif
 
                         <!-- Détails de l'opportunité -->
