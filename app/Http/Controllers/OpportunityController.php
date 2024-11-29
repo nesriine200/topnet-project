@@ -40,22 +40,17 @@ class OpportunityController extends Controller
         return view('opportunities.index', compact('opportunities'));
     }
 
-    // Display Contracts List (with search support)
     public function contract(Request $request)
     {
-        $query = Opportunity::with('user');
-
-        if ($request->has('search')) {
-            $search = $request->query('search');
-            $query->where('client', 'like', '%' . $search . '%');
+        if (Auth::user()->hasRole('admin')) {
+            $query = Opportunity::where('etat', 'valide')->query();
+        } else if (Auth::user()->hasRole('apporteur')) {
+            $query = Opportunity::where('etat', 'valide')->where('user_id', Auth::id());
+        } else if (Auth::user()->hasRole('charge')) {
+            $query = Opportunity::where('etat', 'valide')->whereIn('user_id', Auth::user()->apporteurs->pluck('id'));
         }
 
         $opportunities = $query->get();
-
-        // Return response as JSON if AJAX request
-        if ($request->ajax()) {
-            return response()->json($opportunities);
-        }
 
         return view('opportunities.contract', compact('opportunities'));
     }

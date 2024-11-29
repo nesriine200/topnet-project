@@ -3,8 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Opportunities</h1>
-                <a href="{{ route('opportunities.create') }}" class="btn btn-primary mb-3">Create Opportunity</a>
+                <h1>Contracts</h1>
                 {{--                <form action="{{ route('opportunities.index') }}" method="GET"> --}}
                 {{--                    <div class="input-group"> --}}
                 {{--                        <input type="text" name="search" class="form-control" placeholder="Rechercher une opportunité" value="{{ request()->query('search') }}"> --}}
@@ -13,12 +12,6 @@
                 {{--                        </div> --}}
                 {{--                    </div> --}}
                 {{--                </form> --}}
-                <form action="{{ route('opportunities.index') }}" method="GET" id="search-form">
-                    <div class="input-group mb-3">
-                        <input type="text" name="search" id="search" class="form-control"
-                            placeholder="Rechercher une opportunité">
-                    </div>
-                </form>
 
                 <!-- Conteneur pour le tableau des résultats -->
                 <div id="opportunity-list">
@@ -38,18 +31,13 @@
                                         {{--                                    <td>{{ $opportunity->id }}</td> --}}
                                         <td>{{ $opportunity->client }}</td>
 
-
-
-
                                         <td>{{ $opportunity->commissions }}</td>
                                         <td>
-                                            <a href="{{ route('opportunities.show', $opportunity->id) }}"
-                                                class="btn btn-info btn-sm">
+                                            <a href="{{ route('opportunities.show', $opportunity->id) }}" class="btn btn-info btn-sm">
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
-                                            <a href="{{ route('opportunities.print', $opportunity->id) }}"
-                                                class="btn btn-secondary btn-sm">
+                                            <a href="{{ route('opportunities.print', $opportunity->id) }}" class="btn btn-secondary btn-sm">
                                                 <i class="fas fa-print"></i>
                                             </a>
 
