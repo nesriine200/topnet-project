@@ -43,7 +43,7 @@ class OpportunityController extends Controller
     public function contract(Request $request)
     {
         if (Auth::user()->hasRole('admin')) {
-            $query = Opportunity::where('etat', 'valide')->query();
+            $query = Opportunity::where('etat', 'valide');
         } else if (Auth::user()->hasRole('apporteur')) {
             $query = Opportunity::where('etat', 'valide')->where('user_id', Auth::id());
         } else if (Auth::user()->hasRole('charge')) {
