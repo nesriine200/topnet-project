@@ -30,6 +30,7 @@ Route::get('/', function () {
 });
 
 Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
+
 Auth::routes();
 
 // Authenticated Routes
