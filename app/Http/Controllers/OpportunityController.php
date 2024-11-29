@@ -2,23 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Opportunity;
 use App\Models\Offer;
+use App\Models\Opportunity;
 use App\Models\User;
-use Carbon\Carbon;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Notifications\OpportunityValidated;
+use App\Services\AuditLogService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Services\AuditLogService;
-
 
 class OpportunityController extends Controller
 {
     // Display Opportunities List (with search support)
     public function index(Request $request)
     {
-        $query = Opportunity::with('user');
+        if (Auth::user()->hasRole('admin')) {
+            $query = Opportunity::query();
+        } else if (Auth::user()->hasRole('apporteur')) {
+            $query = Opportunity::where('user_id', Auth::id());
+        } else if (Auth::user()->hasRole('charge')) {
+            $query = Opportunity::whereIn('user_id', Auth::user()->apporteurs->pluck('id'));
+        }
 
         if ($request->has('search')) {
             $search = $request->query('search');

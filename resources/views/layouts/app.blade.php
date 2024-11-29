@@ -83,7 +83,7 @@
     <script src="../assets/js/config.js"></script>
 
     <!-- Botman Scripts -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/assets/css/chat.min.css">
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/assets/css/chat.min.css"> --}}
     <script>
         var botmanWidget = {
             aboutText: '',

@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Offer;
-use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
 
 class ChatController extends Controller
 {
@@ -24,6 +21,8 @@ class ChatController extends Controller
         } elseif ($user->hasRole('apporteur')) {
             // If the user is an "apporteur", get all the "charges" related to this "apporteur"
             $users = $user->charges;
+        } else {
+            $users = User::all();
         }
 
         return view('chat.index', compact('users'));

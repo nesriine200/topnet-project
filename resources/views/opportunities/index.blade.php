@@ -7,8 +7,7 @@
                 <a href="{{ route('opportunities.create') }}" class="btn btn-primary mb-3">Create Opportunity</a>
                 <form action="{{ route('opportunities.index') }}" method="GET" id="search-form">
                     <div class="input-group mb-3">
-                        <input type="text" name="search" id="search" class="form-control"
-                            placeholder="Rechercher une opportunité">
+                        <input type="text" name="search" id="search" class="form-control" placeholder="Rechercher une opportunité">
                     </div>
                 </form>
 
@@ -39,13 +38,10 @@
                                         {{-- <td>{{ $opportunity->user->name }}</td> --}}
                                         <td>{{ $opportunity->commissions }}</td>
                                         <td>
-                                            <a href="{{ route('opportunities.show', $opportunity->id) }}"
-                                                class="btn btn-info btn-sm">View</a>
-                                            <a href="{{ route('opportunities.edit', $opportunity->id) }}"
-                                                class="btn btn-warning btn-sm">Edit</a>
+                                            <a href="{{ route('opportunities.show', $opportunity->id) }}" class="btn btn-info btn-sm">View</a>
+                                            <a href="{{ route('opportunities.edit', $opportunity->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
-                                            <form action="{{ route('opportunities.destroy', $opportunity->id) }}"
-                                                method="POST" style="display:inline-block;">
+                                            <form action="{{ route('opportunities.destroy', $opportunity->id) }}" method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -81,24 +77,23 @@
                                         $('#opportunity-list tbody').append(
                                             `<tr>
 
-                                <td>${opportunity.client}</td>
-                                <td>${opportunity.etat}</td>
+                                            <td>${opportunity.client}</td>
+                                            <td>${opportunity.etat}</td>
 
-                                <td>${opportunity.matricule_client}</td>
-                                <td>${opportunity.description}</td>
+                                            <td>${opportunity.matricule_client}</td>
+                                            <td>${opportunity.description}</td>
 
-                                <td>${opportunity.user.name}</td>
-                                <td>${opportunity.commissions}</td>
-                                <td>
-                                    <a href="/opportunities/${opportunity.id}" class="btn btn-info btn-sm">View</a>
-                                    <a href="/opportunities/${opportunity.id}/edit" class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="/opportunities/${opportunity.id}" method="POST" style="display:inline-block;">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>`
+                                            <td>${opportunity.commissions}</td>
+                                            <td>
+                                                <a href="/opportunities/${opportunity.id}" class="btn btn-info btn-sm">View</a>
+                                                <a href="/opportunities/${opportunity.id}/edit" class="btn btn-warning btn-sm">Edit</a>
+                                                <form action="/opportunities/${opportunity.id}" method="POST" style="display:inline-block;">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>`
                                         );
                                     });
                                 },

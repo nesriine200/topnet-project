@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Role;
 
 class UserController extends Controller
 {
@@ -34,7 +33,7 @@ class UserController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'roles' => $user->getRoleNames() // Obtenir les rôles
+                    'roles' => $user->getRoleNames(), // Obtenir les rôles
                 ];
             }));
         }
@@ -42,7 +41,6 @@ class UserController extends Controller
         // Retourner la vue avec les résultats si la requête n'est pas AJAX
         return view('users.index', compact('users', 'chargeUsers'));
     }
-
 
     public function show($id)
     {
@@ -83,13 +81,11 @@ class UserController extends Controller
         $user->syncRoles([$request->role]); // Affecte le rôle
         return redirect()->route('users.index')->with('success', 'Rôle assigné avec succès.');
     }
+
     public function showAccountManagers()
     {
-        $chargeUsers = User::role('charge')->get();
-
-        // Récupère les utilisateurs ayant le rôle "chargé de compte"
-        $users = User::role('Charge')->get(); // Méthode "role" de Spatie
-        // Retourne la vue avec les utilisateurs
-        return view('users.account-managers', compact('users', 'chargeUsers'));
+        $users_charges = User::role('charge')->get();
+        $users_apporteurs = User::role('apporteur')->get();
+        return view('users.account-managers', compact('users_charges', 'users_apporteurs'));
     }
 }
