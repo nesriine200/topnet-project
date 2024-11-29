@@ -22,11 +22,11 @@ class RecalculateCommissions extends Command
         $opportunities = Opportunity::where('etat', 'valide')->get();
 
         foreach ($opportunities as $opportunity) {
-            $dateSpecifique = Carbon::create(2024,10 , 11);
-            $mois_payes = Carbon::now()->diffInMonths($dateSpecifique);
+            // $dateSpecifique = Carbon::create(2024,10 , 11);
+            // $mois_payes = Carbon::now()->diffInMonths($dateSpecifique);
 //            // Calcul des mois payés depuis la validation
 //
-//            $mois_payes = Carbon::now()->diffInMonths($opportunity->date_validation);
+           $mois_payes = Carbon::now()->diffInMonths($opportunity->date_validation);
 
             // Calcul de la commission
             $prix_mensuel = $opportunity->offer->price;
