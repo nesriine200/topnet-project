@@ -171,4 +171,13 @@ class OpportunityController extends Controller
         // Download the PDF
         return $pdf->download('contrat_' . $opportunity->id . '.pdf');
     }
+    public function recentlyValidatedOpportunities()
+    {
+        $opportunities = Opportunity::where('etat', 'valide') // Remplacez "status" par "etat" si nécessaire
+            ->orderBy('created_at', 'desc') // Trier par la dernière modification
+            ->take(5) // Récupérer les 5 plus récentes
+            ->get();
+
+        return $opportunities;
+    }
 }

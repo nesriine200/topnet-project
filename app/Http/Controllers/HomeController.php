@@ -76,14 +76,15 @@ class HomeController extends Controller
             $percentageChange = $previousMonthCommission > 0
                 ? (($currentMonthCommission - $previousMonthCommission) / $previousMonthCommission) * 100
                 : 100;
-
+            $recentOpportunities = app(OpportunityController::class)->recentlyValidatedOpportunities();
             return view('home.acceuil', compact(
                 'names',
                 'validatedOpportunities',
                 'totalCommission',
                 'monthlyCommissions',
                 'months',
-                'percentageChange'
+                'percentageChange',
+                'recentOpportunities'
             ));
         }
     }
