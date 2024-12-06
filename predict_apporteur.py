@@ -40,13 +40,17 @@ try:
     data['created_at'] = pd.to_datetime(data['created_at'], errors='coerce')
     data['date_validation'] = pd.to_datetime(data['date_validation'], errors='coerce')
 
+    # Remove timezone information (if any) to avoid tz-naive and tz-aware subtraction issues
+    data['created_at'] = data['created_at'].dt.tz_localize(None)
+    data['date_validation'] = data['date_validation'].dt.tz_localize(None)
+
     # Compute duration in days between created_at and date_validation
-    # If date_validation is NaN, we'll set duration to 0
+    # If date_validation is NaN, we set duration to 0
     data['duration_days'] = (data['date_validation'] - data['created_at']).dt.total_seconds() / (3600 * 24)
     data['duration_days'] = data['duration_days'].fillna(0.0)
 
     # Features: commissions and duration_days
-    # In this dataset we have individual opportunities, so these 2 features may help guess if it's valide or not
+    # In this dataset we have individual opportunities, so these features help guess if it's valide or not
     X = data[['commissions', 'duration_days']]
     y = data['etat_numeric']
 
