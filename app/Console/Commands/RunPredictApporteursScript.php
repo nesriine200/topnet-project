@@ -20,7 +20,7 @@ class RunPythonScript extends Command
      *
      * @var string
      */
-    protected $description = 'Run the custom Python script';
+    protected $description = 'Run the Python script that predicts apporteurs validation state';
 
     /**
      * Execute the console command.
@@ -29,15 +29,20 @@ class RunPythonScript extends Command
      */
     public function handle()
     {
-        // Adjust the path to your python binary and script location as needed
-        $process = new Process(['python3', '/var/www/myproject/scripts/your_script.py']);
+        // If 'predict_apporteur.py' is in the main Laravel directory, use base_path()
+        $pythonPath = 'python3';
+        $scriptPath = base_path('predict_apporteur.py');
+
+        $process = new Process([$pythonPath, $scriptPath]);
+        $process->setTimeout(300); // Optional timeout
+
         $process->run();
 
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
-        // Optional: log or output the result
-        $this->info($process->getOutput());
+        $this->info("Python script executed successfully.");
+        $this->line($process->getOutput());
     }
 }
