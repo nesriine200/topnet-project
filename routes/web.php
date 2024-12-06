@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\BotManController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DataExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OfferController;
@@ -32,6 +33,8 @@ Route::get('/', function () {
 Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
 
 Auth::routes();
+
+Route::get('export-data', [DataExportController::class, 'exportData']);
 
 // Authenticated Routes
 Route::middleware(['auth'])->group(function () {
