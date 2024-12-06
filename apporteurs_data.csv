@@ -1,0 +1,6 @@
+user_id,name,total_commission,opportunities_validated,avg_opportunity_duration,performance
+101,John Doe,12500.5,30,2.4,78.5
+102,Jane Smith,9800.0,25,3.1,65.0
+103,Alice Dupont,15400,40,1.9,88.0
+104,Bob Martin,7200.75,20,4.3,55.0
+105,Claire Bernard,20000,50,2.0,93.5
