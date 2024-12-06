@@ -1,81 +1,99 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import pickle
 import matplotlib.pyplot as plt
 import logging
 
-# Configure logging to log to both a file and the console
+# Configure logging
 logging.basicConfig(
-    level=logging.INFO,  # Set the lowest level to log
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    level=logging.INFO,
+    format='%(message)s',
     handlers=[
-        logging.FileHandler('predict_apporteur.log'),  # Log file
-        logging.StreamHandler()  # Log to console
+        logging.FileHandler('predict_apporteur.log'),
+        logging.StreamHandler()
     ]
 )
 
 try:
-    # Log the start of the script
-    logging.info("Script started")
+    logging.info("Starting the script to analyze 'etat' (valide/invalide).")
 
-    # Charger les données depuis le fichier CSV
-    logging.info("Loading data from 'apporteurs_data.csv'")
+    # Chargement des données
+    logging.info("Loading data from 'apporteurs_data.csv'.")
     data = pd.read_csv('apporteurs_data.csv')
-    logging.info("Data loaded successfully. First few rows:")
-    logging.info("\n%s", data.head())
+    logging.info("Data loaded successfully.")
 
-    # Examiner les premières lignes pour comprendre les données
-    logging.info("Examining data columns")
-    logging.info("Columns found: %s", list(data.columns))
+    # Analyser les colonnes disponibles
+    logging.info(f"Columns available: {list(data.columns)}")
 
-    # Sélectionner les colonnes pertinentes pour la régression
-    logging.info("Selecting relevant columns for regression")
+    # Sélection des features
+    # On suppose que ces 3 colonnes restent utiles pour prédire l'état
+    logging.info("Preparing data for classification.")
     X = data[['total_commission', 'opportunities_validated', 'avg_opportunity_duration']]
-    y = data['performance']
-    logging.info("Features selected: %s", list(X.columns))
-    logging.info("Target selected: 'performance'")
 
-    # Diviser les données en ensemble d'entraînement et de test
-    logging.info("Splitting data into training and testing sets")
+    # Cible : on prédit l'état valide/invalide
+    # On suppose que la colonne 'etat' contient des valeurs "valide" ou "invalide"
+    if 'etat' not in data.columns:
+        raise ValueError("La colonne 'etat' n'existe pas dans le dataset.")
+
+    # Conversion texte -> numérique : valide = 1, invalide = 0
+    data['etat_numeric'] = data['etat'].apply(lambda x: 1 if x.strip().lower() == 'valide' else 0)
+    y = data['etat_numeric']
+
+    logging.info("Features: total_commission, opportunities_validated, avg_opportunity_duration")
+    logging.info("Target: etat (valide/invalide)")
+
+    # Division en sets d'entraînement et de test
+    logging.info("Splitting data into training and test sets.")
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    logging.info("Data split completed: %d training samples, %d testing samples", len(X_train), len(X_test))
+    logging.info(f"Data split complete: {len(X_train)} training samples and {len(X_test)} test samples.")
 
-    # Créer et entraîner le modèle de régression linéaire
-    logging.info("Creating and training the Linear Regression model")
-    model = LinearRegression()
+    # Modèle de régression logistique pour classification
+    logging.info("Training the Logistic Regression model.")
+    model = LogisticRegression(max_iter=1000)
     model.fit(X_train, y_train)
-    logging.info("Model trained successfully")
+    logging.info("Model trained successfully.")
 
-    # Faire des prédictions
-    logging.info("Making predictions on the test data")
+    # Prédictions sur le test set
+    logging.info("Making predictions on the test set.")
     y_pred = model.predict(X_test)
-    logging.info("Predictions completed")
+    logging.info("Predictions complete.")
 
-    # Calculer l'erreur quadratique moyenne (MSE)
-    logging.info("Calculating Mean Squared Error (MSE)")
-    mse = mean_squared_error(y_test, y_pred)
-    logging.info("Mean Squared Error: %f", mse)
+    # Évaluer le modèle par l'accuracy
+    logging.info("Evaluating model performance.")
+    accuracy = accuracy_score(y_test, y_pred)
+    logging.info(f"Model accuracy: {accuracy:.2f}")
 
-    # Sauvegarder le modèle pour une utilisation future
-    logging.info("Saving the trained model to 'regression_model.pkl'")
-    with open('regression_model.pkl', 'wb') as file:
+    # Afficher un rapport de classification
+    logging.info("Classification report:")
+    logging.info("\n" + classification_report(y_test, y_pred))
+
+    # Matrice de confusion pour visualiser le résultat
+    cm = confusion_matrix(y_test, y_pred)
+    logging.info(f"Confusion Matrix:\n{cm}")
+
+    # Sauvegarder le modèle entraîné
+    logging.info("Saving the trained model.")
+    with open('classification_model.pkl', 'wb') as file:
         pickle.dump(model, file)
-    logging.info("Model saved successfully")
+    logging.info("Model saved successfully as 'classification_model.pkl'.")
 
-    # Visualisation des résultats
-    logging.info("Generating scatter plot for predictions vs reality")
-    plt.scatter(y_test, y_pred)
-    plt.xlabel('Valeurs réelles')
-    plt.ylabel('Prédictions')
-    plt.title('Prédictions vs Réalité')
-    plt.savefig('predictions_vs_reality.png')  # Save the plot as a file
-    logging.info("Scatter plot saved as 'predictions_vs_reality.png'")
+    # Optionnel : Visualisation simple (par exemple bar chart du cm)
+    # On peut afficher la matrice de confusion à l'aide de matplotlib
+    fig, ax = plt.subplots()
+    cax = ax.matshow(cm, cmap='Blues')
+    plt.title('Confusion Matrix')
+    plt.colorbar(cax)
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    for (i, j), z in np.ndenumerate(cm):
+        ax.text(j, i, str(z), ha='center', va='center')
+    plt.savefig('confusion_matrix.png')
     plt.show()
+    logging.info("Confusion matrix saved as 'confusion_matrix.png'.")
 
-    # Log the end of the script
-    logging.info("Script finished successfully")
+    logging.info("Script completed successfully.")
 
 except Exception as e:
-    logging.error("An error occurred: %s", e, exc_info=True)
+    logging.error(f"An error occurred: {str(e)}")
