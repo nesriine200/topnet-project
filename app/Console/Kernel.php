@@ -18,6 +18,8 @@ class Kernel extends ConsoleKernel
         // Planifie la commande commissions:recalculate pour qu'elle s'exécute chaque mois
         // $schedule->command('commissions:recalculate')->everyMinute();
         $schedule->command('commissions:recalculate')->weeklyOn(4, "10:00");
+  
+        $schedule->command('python:run-predict-apporteurs-script')->weeklyOn(4, "11:00");
     }
 
     /**
