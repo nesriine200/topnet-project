@@ -21,8 +21,8 @@ try:
     logging.info("Starting the script to analyze 'etat' (valide / non-valide).")
 
     # Load the data
-    logging.info("Loading data from 'apporteurs_data.csv'.")
-    data = pd.read_csv('apporteurs_data.csv')
+    logging.info("Loading data from 'opportunities_data.csv'.")
+    data = pd.read_csv('opportunities_data.csv')
     logging.info("Data loaded successfully.")
     logging.info(f"Columns available: {list(data.columns)}")
 
