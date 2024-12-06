@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.utils.multiclass import unique_labels
 import pickle
 import matplotlib.pyplot as plt
 import logging
@@ -17,7 +18,6 @@ logging.basicConfig(
     ]
 )
 
-# Friendly output for evaluation
 try:
     logging.info("Starting the script to analyze 'etat' (valide, invalide, en cours).")
 
@@ -83,13 +83,22 @@ try:
     accuracy = accuracy_score(y_test, y_pred)
     logging.info(f"Model accuracy: {accuracy:.2f}")
 
-    # Generate classification report
+    # Classification Report
+    labels = sorted(unique_labels(y_test))  # Get the unique classes in the test set
     class_names = ["En cours (0)", "Invalide (-1)", "Valide (1)"]
-    report = classification_report(y_test, y_pred, target_names=class_names, output_dict=True)
+    selected_class_names = [class_names[labels.index(label)] for label in labels]
+
+    report = classification_report(
+        y_test,
+        y_pred,
+        target_names=selected_class_names,
+        labels=labels,
+        output_dict=True
+    )
     logging.info("Classification report generated.")
 
     # Confusion Matrix
-    cm = confusion_matrix(y_test, y_pred)
+    cm = confusion_matrix(y_test, y_pred, labels=labels)
     logging.info(f"Confusion Matrix:\n{cm}")
 
     # Friendly Summary
@@ -98,17 +107,24 @@ try:
     Accuracy: {accuracy:.2f}
 
     Classification Report:
-    - En cours (0): Precision={report['En cours (0)']['precision']:.2f}, Recall={report['En cours (0)']['recall']:.2f}, F1 Score={report['En cours (0)']['f1-score']:.2f}
-    - Invalide (-1): Precision={report['Invalide (-1)']['precision']:.2f}, Recall={report['Invalide (-1)']['recall']:.2f}, F1 Score={report['Invalide (-1)']['f1-score']:.2f}
-    - Valide (1): Precision={report['Valide (1)']['precision']:.2f}, Recall={report['Valide (1)']['recall']:.2f}, F1 Score={report['Valide (1)']['f1-score']:.2f}
-    
-    Confusion Matrix:
-            Predicted ->  En cours (0)   Invalide (-1)   Valide (1)
-    Actual
-    En cours (0)       {cm[0, 0]}             {cm[0, 1]}             {cm[0, 2]}
-    Invalide (-1)      {cm[1, 0]}             {cm[1, 1]}             {cm[1, 2]}
-    Valide (1)         {cm[2, 0]}             {cm[2, 1]}             {cm[2, 2]}
     """
+    for i, label in enumerate(selected_class_names):
+        precision = report[label]['precision']
+        recall = report[label]['recall']
+        f1_score = report[label]['f1-score']
+        support = report[label]['support']
+        summary += f"    - {label}: Precision={precision:.2f}, Recall={recall:.2f}, F1 Score={f1_score:.2f}, Support={support}\n"
+
+    summary += f"""
+
+    Confusion Matrix:
+            Predicted -> {'   '.join(selected_class_names)}
+    Actual
+    """
+    for i, actual_label in enumerate(selected_class_names):
+        row = "    " + actual_label.ljust(15) + "".join([f"{cm[i, j]:<10}" for j in range(len(selected_class_names))])
+        summary += row + "\n"
+
     print(summary)
 
     # Save to a text file for user reference
