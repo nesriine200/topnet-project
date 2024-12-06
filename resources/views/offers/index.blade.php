@@ -3,8 +3,9 @@
 @section('dashboard-content')
     <div class="container">
         <h1>Liste des Offres</h1>
-        <a href="{{ route('offers.create') }}" class="btn btn-primary mb-3">Créer une nouvelle offre</a>
-
+        @hasanyrole('charge|admin')
+            <a href="{{ route('offers.create') }}" class="btn btn-primary mb-3">Créer une nouvelle offre</a>
+        @endhasanyrole
         <!-- Formulaire de recherche -->
         <form action="{{ route('offers.index') }}" method="GET" id="search-form" class="mb-3">
             <div class="input-group">
