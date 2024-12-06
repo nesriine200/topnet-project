@@ -9,34 +9,33 @@ class DataExportController extends Controller
 {
     public function exportData()
     {
-        // Récupérer les données des apporteurs d'affaires
+        // Retrieve all Opportunity records
         $data = Opportunity::all();
-         
-        // DB::table('opportunities')
-        //     ->join('users', 'opportunities.user_id', '=', 'users.id')
-        //     ->select(
-        //         'users.id as user_id', 
-        //         'users.name',
-        //         DB::raw('SUM(opportunities.commissions) as total_commission'), // Adjusted column name
-        //         DB::raw('COUNT(opportunities.id) as opportunities_validated'),
-        //         DB::raw('AVG(DATEDIFF(opportunities.date_validation, opportunities.created_at)) as avg_opportunity_duration') // Adjusted for 'date_validation'
-        //     )
-        //     ->where('opportunities.etat', '=', 'valide') // Only include valid opportunities
-        //     ->groupBy('users.id', 'users.name')
-        //     ->get();
 
-        $csvFileName = 'apporteurs_data.csv';
+        $csvFileName = 'opportunities_data.csv';
         $filePath = storage_path('app/' . $csvFileName);
 
         // Open file for writing
         $handle = fopen($filePath, 'w');
 
-        // Add CSV headers
-        fputcsv($handle, ['user_id', 'name', 'total_commission', 'opportunities_validated', 'avg_opportunity_duration']);
+        // If you know the columns you want, set them as headers:
+        fputcsv($handle, ['id', 'user_id', 'commissions', 'etat', 'created_at', 'updated_at', 'date_validation']);
 
-        // Write data rows to CSV
+        // Write each row to the CSV
         foreach ($data as $row) {
-            fputcsv($handle, (array) $row);
+            // Convert the Eloquent model instance to an array
+            $arrayRow = $row->toArray();
+            // Select only the fields you want to export:
+            $csvRow = [
+                $arrayRow['id'],
+                $arrayRow['user_id'],
+                $arrayRow['commissions'],
+                $arrayRow['etat'],
+                $arrayRow['created_at'],
+                $arrayRow['updated_at'],
+                $arrayRow['date_validation'],
+            ];
+            fputcsv($handle, $csvRow);
         }
 
         // Close the file
@@ -44,5 +43,6 @@ class DataExportController extends Controller
 
         // Return the CSV file for download
         return response()->download($filePath);
+
     }
 }
