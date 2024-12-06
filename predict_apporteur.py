@@ -6,11 +6,14 @@ import pickle
 import matplotlib.pyplot as plt
 import logging
 
-# Configure logging
+# Configure logging to log to both a file and the console
 logging.basicConfig(
-    filename='predict_apporteur.log',
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO,  # Set the lowest level to log
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('predict_apporteur.log'),  # Log file
+        logging.StreamHandler()  # Log to console
+    ]
 )
 
 try:
