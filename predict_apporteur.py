@@ -22,7 +22,7 @@ try:
 
     # Load the data
     logging.info("Loading data from 'opportunities_data.csv'.")
-    data = pd.read_csv('storage/app/public/opportunities_data.csv')
+    data = pd.read_csv('storage/app/opportunities_data.csv')
     logging.info("Data loaded successfully.")
     logging.info(f"Columns available: {list(data.columns)}")
 
