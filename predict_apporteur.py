@@ -5,6 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report
 import logging
+import numpy as np
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -19,7 +20,7 @@ logging.info(f"Initial data:\n{data.head()}")
 etat_mapping = {
     'valide': 20,         # Highest weight
     'en cours': 6,        # Moderate weight
-    'non valide': 0       # Neutral weight (no penalty)
+    'non valide': 0       # Neutral weight
 }
 data['etat_numeric'] = data['etat'].apply(
     lambda x: etat_mapping.get(x.strip().lower(), None) if isinstance(x, str) else None
@@ -75,50 +76,61 @@ try:
     logging.info("Classification Report:")
     logging.info("\n" + classification_report(y_test, y_pred))
 
-    # Aggregate predictions by user_id
-    predictions_by_user = data.groupby('user_id').agg(
-        total_opportunities=('etat_numeric', 'count'),
-        validated_count=('etat_numeric', lambda x: (x == 20).sum()),  # Count of "valide"
-        en_cours_count=('etat_numeric', lambda x: (x == 6).sum()),    # Count of "en cours"
-        non_valide_count=('etat_numeric', lambda x: (x == 0).sum())  # Count of "non valide"
+    # Predict for opportunities in 2025
+    future_opportunities = data.copy()
+    future_opportunities['created_at'] = pd.to_datetime("2025-01-01")  # Set all to Jan 1, 2025
+    future_opportunities['duration_days'] = (pd.to_datetime("2025-12-31") - future_opportunities['created_at']).dt.total_seconds() / (3600 * 24)
+    X_future = future_opportunities[['commissions', 'duration_days', 'user_id_encoded']]
+    future_predictions = model.predict(X_future)
+    future_opportunities['predicted_etat'] = future_predictions
+
+    # Aggregate predictions for 2025
+    predictions_2025 = future_opportunities.groupby('user_id').agg(
+        total_opportunities=('predicted_etat', 'count'),
+        validated_count=('predicted_etat', lambda x: (x == 20).sum())
+    )
+    predictions_2025['validation_percentage'] = (
+        predictions_2025['validated_count'] / predictions_2025['total_opportunities'] * 100
     )
 
-    # Introduce scoring logic with weights
-    predictions_by_user['adjusted_score'] = (
-        20 * predictions_by_user['validated_count'] +     # Weight for "valide"
-        6 * predictions_by_user['en_cours_count']         # Weight for "en cours"
-        # No penalty for "non valide" as weight is 0
-    )
+    # Debug: Check predictions for 2025
+    logging.info(f"Predictions for 2025:\n{predictions_2025}")
 
-    # Calculate validation percentage based on adjusted score
-    predictions_by_user['validation_percentage'] = (
-        predictions_by_user['adjusted_score'] /
-        (predictions_by_user['total_opportunities'] * 20) * 100  # Normalize by maximum possible score
-    )
-
-    # Debug: Check predictions
-    logging.info(f"Predictions by user with adjusted scores:\n{predictions_by_user}")
-
-    # Sort predictions_by_user by validation percentage in descending order
-    predictions_by_user = predictions_by_user.sort_values(by='validation_percentage', ascending=False)
-
-    # Visualization: Bar chart of adjusted validation percentages by user_id (sorted)
+    # Visualization: Bar chart for predicted valid opportunities in 2025
     plt.figure(figsize=(12, 6))
     plt.bar(
-        predictions_by_user.index.astype(str),  # Convert user_id to string explicitly
-        predictions_by_user['validation_percentage'],
+        predictions_2025.index.astype(str),  # Convert user_id to string explicitly
+        predictions_2025['validated_count'],
+        color='skyblue'
+    )
+    plt.xlabel('User ID')
+    plt.ylabel('Number of Predicted Valid Opportunities')
+    plt.title('Predicted Valid Opportunities by User for 2025')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    # Save the chart
+    plt.savefig('predicted_valid_opportunities_2025.png', dpi=300)
+    logging.info("Bar chart for valid opportunities saved as 'predicted_valid_opportunities_2025.png'.")
+    plt.show()
+
+    # Visualization: Bar chart for validation percentage in 2025
+    plt.figure(figsize=(12, 6))
+    plt.bar(
+        predictions_2025.index.astype(str),  # Convert user_id to string explicitly
+        predictions_2025['validation_percentage'],
         color='skyblue'
     )
     plt.xlabel('User ID')
     plt.ylabel('Validation Percentage (%)')
-    plt.title('Adjusted Validation Percentage by User ID (Ordered)')
+    plt.title('Predicted Validation Percentage by User for 2025')
     plt.xticks(rotation=45)
     plt.ylim(0, 100)
     plt.tight_layout()
 
-    # Save the sorted plot to PNG
-    plt.savefig('adjusted_validation_percentage_by_user_ordered.png', dpi=300)
-    logging.info("Bar chart saved as 'adjusted_validation_percentage_by_user_ordered.png'.")
+    # Save the chart
+    plt.savefig('predicted_validation_percentage_2025.png', dpi=300)
+    logging.info("Bar chart for validation percentage saved as 'predicted_validation_percentage_2025.png'.")
     plt.show()
 
 except Exception as e:
