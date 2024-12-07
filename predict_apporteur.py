@@ -19,7 +19,7 @@ logging.info(f"Initial data:\n{data.head()}")
 etat_mapping = {
     'valide': 20,         # Highest weight
     'en cours': 6,        # Moderate weight
-    'non valide': 0       # Neutral weight
+    'non valide': 0       # Neutral weight (no penalty)
 }
 data['etat_numeric'] = data['etat'].apply(
     lambda x: etat_mapping.get(x.strip().lower(), None) if isinstance(x, str) else None
@@ -75,57 +75,50 @@ try:
     logging.info("Classification Report:")
     logging.info("\n" + classification_report(y_test, y_pred))
 
-    # Create simulated 2024 data based on 2024 patterns
-    data_2024 = data.copy()
-    data_2024['created_at'] = pd.to_datetime("2024-01-01")  # Start of 2024
-    data_2024['duration_days'] = (pd.to_datetime("2024-12-31") - data_2024['created_at']).dt.total_seconds() / (3600 * 24)
-    X_2024 = data_2024[['commissions', 'duration_days', 'user_id_encoded']]
-
-    # Predict outcomes for 2024
-    data_2024['predicted_etat'] = model.predict(X_2024)
-
-    # Aggregate 2024 predictions
-    predictions_2024 = data_2024.groupby('user_id').agg(
-        total_opportunities=('predicted_etat', 'count'),
-        validated_count=('predicted_etat', lambda x: (x == 20).sum())
-    )
-    predictions_2024['validation_percentage'] = (
-        predictions_2024['validated_count'] / predictions_2024['total_opportunities'] * 100
+    # Aggregate predictions by user_id
+    predictions_by_user = data.groupby('user_id').agg(
+        total_opportunities=('etat_numeric', 'count'),
+        validated_count=('etat_numeric', lambda x: (x == 20).sum()),  # Count of "valide"
+        en_cours_count=('etat_numeric', lambda x: (x == 6).sum()),    # Count of "en cours"
+        non_valide_count=('etat_numeric', lambda x: (x == 0).sum())  # Count of "non valide"
     )
 
-    # Debug: Check predictions for 2024
-    logging.info(f"Predictions for 2024:\n{predictions_2024}")
+    # Introduce scoring logic with weights
+    predictions_by_user['adjusted_score'] = (
+        20 * predictions_by_user['validated_count'] +     # Weight for "valide"
+        6 * predictions_by_user['en_cours_count']         # Weight for "en cours"
+        # No penalty for "non valide" as weight is 0
+    )
 
-    # Visualization: Merged chart with two subplots
-    fig, axes = plt.subplots(2, 1, figsize=(12, 10))
-    
-    # Subplot 1: Number of valid opportunities
-    axes[0].bar(
-        predictions_2024.index.astype(str),
-        predictions_2024['validated_count'],
+    # Calculate validation percentage based on adjusted score
+    predictions_by_user['validation_percentage'] = (
+        predictions_by_user['adjusted_score'] /
+        (predictions_by_user['total_opportunities'] * 20) * 100  # Normalize by maximum possible score
+    )
+
+    # Debug: Check predictions
+    logging.info(f"Predictions by user with adjusted scores:\n{predictions_by_user}")
+
+    # Sort predictions_by_user by validation percentage in descending order
+    predictions_by_user = predictions_by_user.sort_values(by='validation_percentage', ascending=False)
+
+    # Visualization: Bar chart of adjusted validation percentages by user_id (sorted)
+    plt.figure(figsize=(12, 6))
+    plt.bar(
+        predictions_by_user.index.astype(str),  # Convert user_id to string explicitly
+        predictions_by_user['validation_percentage'],
         color='skyblue'
     )
-    axes[0].set_xlabel('User ID')
-    axes[0].set_ylabel('Number of Validated Opportunities')
-    axes[0].set_title('Predicted Validated Opportunities by User for 2024')
-    axes[0].tick_params(axis='x', rotation=45)
-
-    # Subplot 2: Percentage of valid opportunities
-    axes[1].bar(
-        predictions_2024.index.astype(str),
-        predictions_2024['validation_percentage'],
-        color='skyblue'
-    )
-    axes[1].set_xlabel('User ID')
-    axes[1].set_ylabel('Validation Percentage (%)')
-    axes[1].set_title('Predicted Validation Percentage by User for 2024')
-    axes[1].set_ylim(0, 100)
-    axes[1].tick_params(axis='x', rotation=45)
-
-    # Adjust layout and save
+    plt.xlabel('User ID')
+    plt.ylabel('Validation Percentage (%)')
+    plt.title('Adjusted Validation Percentage by User ID (Ordered)')
+    plt.xticks(rotation=45)
+    plt.ylim(0, 100)
     plt.tight_layout()
-    plt.savefig('predicted_opportunities_2024.png', dpi=300)
-    logging.info("Merged chart saved as 'predicted_opportunities_2024.png'.")
+
+    # Save the sorted plot to PNG
+    plt.savefig('adjusted_validation_percentage_by_user_ordered.png', dpi=300)
+    logging.info("Bar chart saved as 'adjusted_validation_percentage_by_user_ordered.png'.")
     plt.show()
 
 except Exception as e:
