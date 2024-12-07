@@ -85,9 +85,9 @@ try:
 
     # Introduce scoring logic with strong weights/penalties
     predictions_by_user['adjusted_score'] = (
-        10 * predictions_by_user['validated_count'] +     # Weight for "valide"
-        2 * predictions_by_user['en_cours_count'] +       # Weight for "en cours"
-        -5 * predictions_by_user['non_valide_count']      # Penalty for "non valide"
+        20 * predictions_by_user['validated_count'] +     # Weight for "valide"
+        6 * predictions_by_user['en_cours_count'] +       # Weight for "en cours"
+        0 * predictions_by_user['non_valide_count']      # Penalty for "non valide"
     )
 
     # Calculate validation percentage based on adjusted score
