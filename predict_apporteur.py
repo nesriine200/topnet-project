@@ -15,18 +15,17 @@ data = pd.read_csv('storage/app/opportunities_data.csv')
 # Debug: Print initial data
 logging.info(f"Initial data:\n{data.head()}")
 
-# Map 'etat' to numeric: "valide" → 1, "en cours" → 0, "non valide" → -1
+# Map 'etat' to numeric: "valide" → 5, "en cours" → 2, "non valide" → 0
 etat_mapping = {
-    'valide': 1,
-    'en cours': 0,
-    'non valide': -1
+    'valide': 5,
+    'en cours': 2,
+    'non valide': 0
 }
 data['etat_numeric'] = data['etat'].apply(
     lambda x: etat_mapping[x.strip().lower()] if isinstance(x, str) else None
 )
 
 try:
-    
     # Debug: Check mapped values
     logging.info(f"Mapped etat values:\n{data[['etat', 'etat_numeric']].drop_duplicates()}")
 
@@ -110,6 +109,6 @@ try:
     plt.savefig('validation_percentage_by_user.png', dpi=300)
     logging.info("Bar chart saved as 'validation_percentage_by_user.png'.")
     plt.show()
-    
+
 except Exception as e:
     logging.error(f"An error occurred: {str(e)}")
