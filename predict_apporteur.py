@@ -15,11 +15,11 @@ data = pd.read_csv('storage/app/opportunities_data.csv')
 # Debug: Print initial data
 logging.info(f"Initial data:\n{data.head()}")
 
-# Map 'etat' to numeric: "valide" → 10, "en cours" → 2, "non valide" → -5
+# Map 'etat' to numeric: "valide" → 20, "en cours" → 6, "non valide" → -5
 etat_mapping = {
     'valide': 20,         # Highest weight
     'en cours': 6,        # Moderate weight
-    'non valide': 1      # Penalizing weight
+    'non valide': -5      # Penalizing weight
 }
 data['etat_numeric'] = data['etat'].apply(
     lambda x: etat_mapping.get(x.strip().lower(), None) if isinstance(x, str) else None
@@ -80,20 +80,20 @@ try:
         total_opportunities=('etat_numeric', 'count'),
         validated_count=('etat_numeric', lambda x: (x == 20).sum()),  # Count of "valide"
         en_cours_count=('etat_numeric', lambda x: (x == 6).sum()),    # Count of "en cours"
-        non_valide_count=('etat_numeric', lambda x: (x == 1).sum())  # Count of "non valide"
+        non_valide_count=('etat_numeric', lambda x: (x == -5).sum())  # Count of "non valide"
     )
 
     # Introduce scoring logic with strong weights/penalties
     predictions_by_user['adjusted_score'] = (
         20 * predictions_by_user['validated_count'] +     # Weight for "valide"
         6 * predictions_by_user['en_cours_count'] +       # Weight for "en cours"
-        1 * predictions_by_user['non_valide_count']      # Penalty for "non valide"
+        -5 * predictions_by_user['non_valide_count']      # Penalty for "non valide"
     )
 
     # Calculate validation percentage based on adjusted score
     predictions_by_user['validation_percentage'] = (
         predictions_by_user['adjusted_score'] /
-        (predictions_by_user['total_opportunities'] * 10) * 100  # Normalize by maximum possible score
+        (predictions_by_user['total_opportunities'] * 20) * 100  # Normalize by maximum possible score
     )
 
     # Debug: Check predictions
