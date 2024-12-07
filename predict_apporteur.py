@@ -15,14 +15,14 @@ data = pd.read_csv('storage/app/opportunities_data.csv')
 # Debug: Print initial data
 logging.info(f"Initial data:\n{data.head()}")
 
-# Map 'etat' to numeric: "valide" → 5, "en cours" → 2, "non valide" → 0
+# Map 'etat' to numeric: "valide" → 10, "en cours" → 5, "non valide" → 0
 etat_mapping = {
     'valide': 10,         # Highest weight
-    'en cours': 5,        # Intermediate weight, reflecting its potential to convert
+    'en cours': 5,        # Intermediate weight
     'non valide': 0       # Lowest weight
 }
 data['etat_numeric'] = data['etat'].apply(
-    lambda x: etat_mapping[x.strip().lower()] if isinstance(x, str) else None
+    lambda x: etat_mapping.get(x.strip().lower(), None) if isinstance(x, str) else None
 )
 
 try:
