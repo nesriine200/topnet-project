@@ -20,7 +20,7 @@ try:
     logging.info("Starting the script to predict validated opportunities by user_id.")
 
     # Load the data
-    data = pd.read_csv('opportunities_data.csv')
+    data = pd.read_csv('storage/app/opportunities_data.csv')
     logging.info("Data loaded successfully.")
 
     # Map 'etat' to numeric: "valide" → 1, "en cours" → 0, "invalide" → -1
