@@ -5,7 +5,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report
 import logging
-import numpy as np
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -76,16 +75,17 @@ try:
     logging.info("Classification Report:")
     logging.info("\n" + classification_report(y_test, y_pred))
 
-    # Predict for opportunities in 2025
-    future_opportunities = data.copy()
-    future_opportunities['created_at'] = pd.to_datetime("2025-01-01")  # Set all to Jan 1, 2025
-    future_opportunities['duration_days'] = (pd.to_datetime("2025-12-31") - future_opportunities['created_at']).dt.total_seconds() / (3600 * 24)
-    X_future = future_opportunities[['commissions', 'duration_days', 'user_id_encoded']]
-    future_predictions = model.predict(X_future)
-    future_opportunities['predicted_etat'] = future_predictions
+    # Create simulated 2025 data based on 2024 patterns
+    data_2025 = data.copy()
+    data_2025['created_at'] = pd.to_datetime("2025-01-01")  # Start of 2025
+    data_2025['duration_days'] = (pd.to_datetime("2025-12-31") - data_2025['created_at']).dt.total_seconds() / (3600 * 24)
+    X_2025 = data_2025[['commissions', 'duration_days', 'user_id_encoded']]
 
-    # Aggregate predictions for 2025
-    predictions_2025 = future_opportunities.groupby('user_id').agg(
+    # Predict outcomes for 2025
+    data_2025['predicted_etat'] = model.predict(X_2025)
+
+    # Aggregate 2025 predictions
+    predictions_2025 = data_2025.groupby('user_id').agg(
         total_opportunities=('predicted_etat', 'count'),
         validated_count=('predicted_etat', lambda x: (x == 20).sum())
     )
@@ -96,7 +96,7 @@ try:
     # Debug: Check predictions for 2025
     logging.info(f"Predictions for 2025:\n{predictions_2025}")
 
-    # Visualization: Bar chart for predicted valid opportunities in 2025
+    # Visualization: Number of valid opportunities in 2025
     plt.figure(figsize=(12, 6))
     plt.bar(
         predictions_2025.index.astype(str),  # Convert user_id to string explicitly
@@ -104,8 +104,8 @@ try:
         color='skyblue'
     )
     plt.xlabel('User ID')
-    plt.ylabel('Number of Predicted Valid Opportunities')
-    plt.title('Predicted Valid Opportunities by User for 2025')
+    plt.ylabel('Number of Validated Opportunities')
+    plt.title('Predicted Validated Opportunities by User for 2025')
     plt.xticks(rotation=45)
     plt.tight_layout()
 
@@ -114,7 +114,7 @@ try:
     logging.info("Bar chart for valid opportunities saved as 'predicted_valid_opportunities_2025.png'.")
     plt.show()
 
-    # Visualization: Bar chart for validation percentage in 2025
+    # Visualization: Percentage of validated opportunities in 2025
     plt.figure(figsize=(12, 6))
     plt.bar(
         predictions_2025.index.astype(str),  # Convert user_id to string explicitly
