@@ -82,16 +82,24 @@ try:
     predictions_by_user = data.groupby('user_id').agg(
         total_opportunities=('etat_numeric', 'count'),
         predicted_validated=('validation_probability', 'sum'),
+        non_valide_count=('etat_numeric', lambda x: (x == 0).sum())  # Count of "non valide"
     )
+
+    # Introduce a penalty for "non valide" opportunities
+    penalty_factor = 0.2  # Adjust penalty as needed
+    predictions_by_user['adjusted_score'] = (
+        predictions_by_user['predicted_validated'] - penalty_factor * predictions_by_user['non_valide_count']
+    )
+
+    # Calculate validation percentage with penalty
     predictions_by_user['validation_percentage'] = (
-        predictions_by_user['predicted_validated'] / predictions_by_user['total_opportunities'] * 100
+        predictions_by_user['adjusted_score'] / predictions_by_user['total_opportunities'] * 100
     )
-    predictions_by_user = predictions_by_user.sort_values(by='validation_percentage', ascending=False)
 
     # Debug: Check predictions
-    logging.info(f"Predictions by user:\n{predictions_by_user}")
+    logging.info(f"Predictions by user with penalties:\n{predictions_by_user}")
 
-    # Visualization: Bar chart of validation percentages by user_id
+    # Visualization: Bar chart of adjusted validation percentages by user_id
     plt.figure(figsize=(12, 6))
     plt.bar(
         predictions_by_user.index.astype(str),  # Convert user_id to string explicitly
@@ -100,14 +108,14 @@ try:
     )
     plt.xlabel('User ID')
     plt.ylabel('Validation Percentage (%)')
-    plt.title('Predicted Validation Percentage by User ID')
+    plt.title('Adjusted Validation Percentage by User ID')
     plt.xticks(rotation=45)
     plt.ylim(0, 100)
     plt.tight_layout()
 
     # Save the plot to PNG
-    plt.savefig('validation_percentage_by_user.png', dpi=300)
-    logging.info("Bar chart saved as 'validation_percentage_by_user.png'.")
+    plt.savefig('adjusted_validation_percentage_by_user.png', dpi=300)
+    logging.info("Bar chart saved as 'adjusted_validation_percentage_by_user.png'.")
     plt.show()
 
 except Exception as e:
