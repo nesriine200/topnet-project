@@ -81,25 +81,32 @@ try:
     # Aggregate predictions by user_id
     predictions_by_user = data.groupby('user_id').agg(
         total_opportunities=('etat_numeric', 'count'),
-        predicted_validated=('validation_probability', 'sum'),
-        non_valide_count=('etat_numeric', lambda x: (x == 0).sum())  # Count of "non valide"
+        validated_count=('etat_numeric', lambda x: (x == 10).sum()),  # Count of "valide"
+        en_cours_count=('etat_numeric', lambda x: (x == 5).sum()),    # Count of "en cours"
+        non_valide_count=('etat_numeric', lambda x: (x == 0).sum()),  # Count of "non valide"
+        predicted_validated=('validation_probability', 'sum')
     )
 
-    # Introduce a penalty for "non valide" opportunities
-    penalty_factor = 0.2  # Adjust penalty as needed
+    # Introduce stronger weights/penalties for each category
     predictions_by_user['adjusted_score'] = (
-        predictions_by_user['predicted_validated'] - penalty_factor * predictions_by_user['non_valide_count']
+        2 * predictions_by_user['validated_count'] +                # Double weight for "valide"
+        0.5 * predictions_by_user['en_cours_count'] -               # Half weight for "en cours"
+        1.0 * predictions_by_user['non_valide_count']               # Full penalty for "non valide"
     )
 
-    # Calculate validation percentage with penalty
+    # Calculate validation percentage based on adjusted score
     predictions_by_user['validation_percentage'] = (
-        predictions_by_user['adjusted_score'] / predictions_by_user['total_opportunities'] * 100
+        predictions_by_user['adjusted_score'] /
+        predictions_by_user['total_opportunities'] * 100
     )
 
     # Debug: Check predictions
     logging.info(f"Predictions by user with penalties:\n{predictions_by_user}")
 
-    # Visualization: Bar chart of adjusted validation percentages by user_id
+    # Sort predictions_by_user by validation percentage in descending order
+    predictions_by_user = predictions_by_user.sort_values(by='validation_percentage', ascending=False)
+
+    # Visualization: Bar chart of adjusted validation percentages by user_id (sorted)
     plt.figure(figsize=(12, 6))
     plt.bar(
         predictions_by_user.index.astype(str),  # Convert user_id to string explicitly
@@ -108,14 +115,14 @@ try:
     )
     plt.xlabel('User ID')
     plt.ylabel('Validation Percentage (%)')
-    plt.title('Adjusted Validation Percentage by User ID')
+    plt.title('Adjusted Validation Percentage by User ID (Ordered)')
     plt.xticks(rotation=45)
     plt.ylim(0, 100)
     plt.tight_layout()
 
-    # Save the plot to PNG
-    plt.savefig('adjusted_validation_percentage_by_user.png', dpi=300)
-    logging.info("Bar chart saved as 'adjusted_validation_percentage_by_user.png'.")
+    # Save the sorted plot to PNG
+    plt.savefig('adjusted_validation_percentage_by_user_ordered.png', dpi=300)
+    logging.info("Bar chart saved as 'adjusted_validation_percentage_by_user_ordered.png'.")
     plt.show()
 
 except Exception as e:
