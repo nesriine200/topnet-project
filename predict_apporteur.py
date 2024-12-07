@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, accuracy_score
+import matplotlib.pyplot as plt
 import numpy as np
 import logging
 
@@ -98,6 +99,23 @@ try:
     # Save results to CSV
     predictions_by_user.to_csv('predictions_by_user.csv')
     logging.info("Predictions saved to 'predictions_by_user.csv'.")
+
+    # Visualization: Bar chart of validation percentages by user_id
+    plt.figure(figsize=(12, 6))
+    plt.bar(
+        predictions_by_user.index.astype(str),
+        predictions_by_user['validation_percentage'],
+        color='skyblue'
+    )
+    plt.xlabel('User ID')
+    plt.ylabel('Validation Percentage (%)')
+    plt.title('Predicted Validation Percentage by User ID')
+    plt.xticks(rotation=45)
+    plt.ylim(0, 100)
+    plt.tight_layout()
+
+    # Show the plot
+    plt.show()
 
 except Exception as e:
     logging.error(f"An error occurred: {str(e)}")
