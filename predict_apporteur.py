@@ -78,9 +78,9 @@ try:
     # Aggregate predictions by user_id
     predictions_by_user = data.groupby('user_id').agg(
         total_opportunities=('etat_numeric', 'count'),
-        validated_count=('etat_numeric', lambda x: (x == 10).sum()),  # Count of "valide"
-        en_cours_count=('etat_numeric', lambda x: (x == 2).sum()),    # Count of "en cours"
-        non_valide_count=('etat_numeric', lambda x: (x == -5).sum())  # Count of "non valide"
+        validated_count=('etat_numeric', lambda x: (x == 20).sum()),  # Count of "valide"
+        en_cours_count=('etat_numeric', lambda x: (x == 6).sum()),    # Count of "en cours"
+        non_valide_count=('etat_numeric', lambda x: (x == 0).sum())  # Count of "non valide"
     )
 
     # Introduce scoring logic with strong weights/penalties
