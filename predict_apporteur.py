@@ -24,11 +24,11 @@ try:
     data = pd.read_csv('storage/app/opportunities_data.csv')
     logging.info("Data loaded successfully.")
 
-    # Map 'etat' to numeric: "valide" → 1, "en cours" → 0, "invalide" → -1
+    # Map 'etat' to numeric: "valide" → 1, "en cours" → 0, "non valide" → -1
     etat_mapping = {
         'valide': 1,
         'en cours': 0,
-        'invalide': -1
+        'non valide': -1
     }
     data['etat_numeric'] = data['etat'].apply(
         lambda x: etat_mapping[x.strip().lower()] if isinstance(x, str) else 0
@@ -58,7 +58,7 @@ try:
     y = data['etat_numeric']
 
     logging.info("Features: commissions, duration_days, user_id_encoded")
-    logging.info("Target: etat_numeric ('valide'=1, 'en cours'=0, 'invalide'=-1)")
+    logging.info("Target: etat_numeric ('valide'=1, 'en cours'=0, 'non valide'=-1)")
 
     # Split data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
