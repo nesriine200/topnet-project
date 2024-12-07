@@ -10,7 +10,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Load the data
-data = pd.read_csv('opportunities_data.csv')
+data = pd.read_csv('storage/app/opportunities_data.csv')
 
 # Debug: Print initial data
 logging.info(f"Initial data:\n{data.head()}")
