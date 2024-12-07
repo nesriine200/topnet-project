@@ -17,9 +17,9 @@ logging.info(f"Initial data:\n{data.head()}")
 
 # Map 'etat' to numeric: "valide" → 5, "en cours" → 2, "non valide" → 0
 etat_mapping = {
-    'valide': 5,
-    'en cours': 2,
-    'non valide': 0
+    'valide': 10,
+    'en cours': 3,
+    'non valide': -2
 }
 data['etat_numeric'] = data['etat'].apply(
     lambda x: etat_mapping[x.strip().lower()] if isinstance(x, str) else None
