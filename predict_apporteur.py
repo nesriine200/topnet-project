@@ -17,9 +17,9 @@ logging.info(f"Initial data:\n{data.head()}")
 
 # Map 'etat' to numeric: "valide" → 10, "en cours" → 2, "non valide" → -5
 etat_mapping = {
-    'valide': 10,         # Highest weight
-    'en cours': 2,        # Moderate weight
-    'non valide': -5      # Penalizing weight
+    'valide': 1,         # Highest weight
+    'en cours': 0,        # Moderate weight
+    'non valide': -1      # Penalizing weight
 }
 data['etat_numeric'] = data['etat'].apply(
     lambda x: etat_mapping.get(x.strip().lower(), None) if isinstance(x, str) else None
