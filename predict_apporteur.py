@@ -99,7 +99,10 @@ try:
     # Debug: Check predictions
     logging.info(f"Predictions by user with penalties:\n{predictions_by_user}")
 
-    # Visualization: Bar chart of adjusted validation percentages by user_id
+    # Sort by validation percentage in descending order
+    predictions_by_user = predictions_by_user.sort_values(by='validation_percentage', ascending=False)
+
+    # Visualization: Bar chart of adjusted validation percentages by user_id (sorted)
     plt.figure(figsize=(12, 6))
     plt.bar(
         predictions_by_user.index.astype(str),  # Convert user_id to string explicitly
@@ -108,14 +111,14 @@ try:
     )
     plt.xlabel('User ID')
     plt.ylabel('Validation Percentage (%)')
-    plt.title('Adjusted Validation Percentage by User ID')
+    plt.title('Adjusted Validation Percentage by User ID (Sorted)')
     plt.xticks(rotation=45)
     plt.ylim(0, 100)
     plt.tight_layout()
 
-    # Save the plot to PNG
-    plt.savefig('adjusted_validation_percentage_by_user.png', dpi=300)
-    logging.info("Bar chart saved as 'adjusted_validation_percentage_by_user.png'.")
+    # Save the sorted plot to PNG
+    plt.savefig('sorted_adjusted_validation_percentage_by_user.png', dpi=300)
+    logging.info("Bar chart saved as 'sorted_adjusted_validation_percentage_by_user.png'.")
     plt.show()
 
 except Exception as e:
