@@ -75,57 +75,57 @@ try:
     logging.info("Classification Report:")
     logging.info("\n" + classification_report(y_test, y_pred))
 
-    # Create simulated 2025 data based on 2024 patterns
-    data_2025 = data.copy()
-    data_2025['created_at'] = pd.to_datetime("2025-01-01")  # Start of 2025
-    data_2025['duration_days'] = (pd.to_datetime("2025-12-31") - data_2025['created_at']).dt.total_seconds() / (3600 * 24)
-    X_2025 = data_2025[['commissions', 'duration_days', 'user_id_encoded']]
+    # Create simulated 2024 data based on 2024 patterns
+    data_2024 = data.copy()
+    data_2024['created_at'] = pd.to_datetime("2024-01-01")  # Start of 2024
+    data_2024['duration_days'] = (pd.to_datetime("2024-12-31") - data_2024['created_at']).dt.total_seconds() / (3600 * 24)
+    X_2024 = data_2024[['commissions', 'duration_days', 'user_id_encoded']]
 
-    # Predict outcomes for 2025
-    data_2025['predicted_etat'] = model.predict(X_2025)
+    # Predict outcomes for 2024
+    data_2024['predicted_etat'] = model.predict(X_2024)
 
-    # Aggregate 2025 predictions
-    predictions_2025 = data_2025.groupby('user_id').agg(
+    # Aggregate 2024 predictions
+    predictions_2024 = data_2024.groupby('user_id').agg(
         total_opportunities=('predicted_etat', 'count'),
         validated_count=('predicted_etat', lambda x: (x == 20).sum())
     )
-    predictions_2025['validation_percentage'] = (
-        predictions_2025['validated_count'] / predictions_2025['total_opportunities'] * 100
+    predictions_2024['validation_percentage'] = (
+        predictions_2024['validated_count'] / predictions_2024['total_opportunities'] * 100
     )
 
-    # Debug: Check predictions for 2025
-    logging.info(f"Predictions for 2025:\n{predictions_2025}")
+    # Debug: Check predictions for 2024
+    logging.info(f"Predictions for 2024:\n{predictions_2024}")
 
     # Visualization: Merged chart with two subplots
     fig, axes = plt.subplots(2, 1, figsize=(12, 10))
     
     # Subplot 1: Number of valid opportunities
     axes[0].bar(
-        predictions_2025.index.astype(str),
-        predictions_2025['validated_count'],
+        predictions_2024.index.astype(str),
+        predictions_2024['validated_count'],
         color='skyblue'
     )
     axes[0].set_xlabel('User ID')
     axes[0].set_ylabel('Number of Validated Opportunities')
-    axes[0].set_title('Predicted Validated Opportunities by User for 2025')
+    axes[0].set_title('Predicted Validated Opportunities by User for 2024')
     axes[0].tick_params(axis='x', rotation=45)
 
     # Subplot 2: Percentage of valid opportunities
     axes[1].bar(
-        predictions_2025.index.astype(str),
-        predictions_2025['validation_percentage'],
+        predictions_2024.index.astype(str),
+        predictions_2024['validation_percentage'],
         color='skyblue'
     )
     axes[1].set_xlabel('User ID')
     axes[1].set_ylabel('Validation Percentage (%)')
-    axes[1].set_title('Predicted Validation Percentage by User for 2025')
+    axes[1].set_title('Predicted Validation Percentage by User for 2024')
     axes[1].set_ylim(0, 100)
     axes[1].tick_params(axis='x', rotation=45)
 
     # Adjust layout and save
     plt.tight_layout()
-    plt.savefig('predicted_opportunities_2025.png', dpi=300)
-    logging.info("Merged chart saved as 'predicted_opportunities_2025.png'.")
+    plt.savefig('predicted_opportunities_2024.png', dpi=300)
+    logging.info("Merged chart saved as 'predicted_opportunities_2024.png'.")
     plt.show()
 
 except Exception as e:
