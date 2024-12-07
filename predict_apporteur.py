@@ -15,11 +15,11 @@ data = pd.read_csv('storage/app/opportunities_data.csv')
 # Debug: Print initial data
 logging.info(f"Initial data:\n{data.head()}")
 
-# Map 'etat' to numeric: "valide" → 10, "en cours" → 5, "non valide" → 0
+# Map 'etat' to numeric: "valide" → 10, "en cours" → 2, "non valide" → -5
 etat_mapping = {
     'valide': 10,         # Highest weight
-    'en cours': 5,        # Intermediate weight
-    'non valide': 0       # Lowest weight
+    'en cours': 2,        # Moderate weight
+    'non valide': -5      # Penalizing weight
 }
 data['etat_numeric'] = data['etat'].apply(
     lambda x: etat_mapping.get(x.strip().lower(), None) if isinstance(x, str) else None
@@ -75,33 +75,29 @@ try:
     logging.info("Classification Report:")
     logging.info("\n" + classification_report(y_test, y_pred))
 
-    # Predictions
-    data['validation_probability'] = model.predict_proba(X)[:, 1]  # Probability of 'valide'
-
     # Aggregate predictions by user_id
     predictions_by_user = data.groupby('user_id').agg(
         total_opportunities=('etat_numeric', 'count'),
         validated_count=('etat_numeric', lambda x: (x == 10).sum()),  # Count of "valide"
-        en_cours_count=('etat_numeric', lambda x: (x == 5).sum()),    # Count of "en cours"
-        non_valide_count=('etat_numeric', lambda x: (x == 0).sum()),  # Count of "non valide"
-        predicted_validated=('validation_probability', 'sum')
+        en_cours_count=('etat_numeric', lambda x: (x == 2).sum()),    # Count of "en cours"
+        non_valide_count=('etat_numeric', lambda x: (x == -5).sum())  # Count of "non valide"
     )
 
-    # Introduce stronger weights/penalties for each category
+    # Introduce scoring logic with strong weights/penalties
     predictions_by_user['adjusted_score'] = (
-        2 * predictions_by_user['validated_count'] +                # Double weight for "valide"
-        0.5 * predictions_by_user['en_cours_count'] -               # Half weight for "en cours"
-        1.0 * predictions_by_user['non_valide_count']               # Full penalty for "non valide"
+        10 * predictions_by_user['validated_count'] +     # Weight for "valide"
+        2 * predictions_by_user['en_cours_count'] +       # Weight for "en cours"
+        -5 * predictions_by_user['non_valide_count']      # Penalty for "non valide"
     )
 
     # Calculate validation percentage based on adjusted score
     predictions_by_user['validation_percentage'] = (
         predictions_by_user['adjusted_score'] /
-        predictions_by_user['total_opportunities'] * 100
+        (predictions_by_user['total_opportunities'] * 10) * 100  # Normalize by maximum possible score
     )
 
     # Debug: Check predictions
-    logging.info(f"Predictions by user with penalties:\n{predictions_by_user}")
+    logging.info(f"Predictions by user with adjusted scores:\n{predictions_by_user}")
 
     # Sort predictions_by_user by validation percentage in descending order
     predictions_by_user = predictions_by_user.sort_values(by='validation_percentage', ascending=False)
