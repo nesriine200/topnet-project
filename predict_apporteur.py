@@ -100,7 +100,7 @@ try:
     predictions_by_user.to_csv('predictions_by_user.csv')
     logging.info("Predictions saved to 'predictions_by_user.csv'.")
 
-    # Visualization: Bar chart of validation percentages by user_id
+   # Visualization: Bar chart of validation percentages by user_id
     plt.figure(figsize=(12, 6))
     plt.bar(
         predictions_by_user.index.astype(str),
@@ -113,6 +113,10 @@ try:
     plt.xticks(rotation=45)
     plt.ylim(0, 100)
     plt.tight_layout()
+
+    # Save the plot to a PNG file
+    plt.savefig('validation_percentage_by_user.png', dpi=300)
+    logging.info("Bar chart saved as 'validation_percentage_by_user.png'.")
 
     # Show the plot
     plt.show()
