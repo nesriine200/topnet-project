@@ -96,41 +96,36 @@ try:
     # Debug: Check predictions for 2025
     logging.info(f"Predictions for 2025:\n{predictions_2025}")
 
-    # Visualization: Number of valid opportunities in 2025
-    plt.figure(figsize=(12, 6))
-    plt.bar(
-        predictions_2025.index.astype(str),  # Convert user_id to string explicitly
+    # Visualization: Merged chart with two subplots
+    fig, axes = plt.subplots(2, 1, figsize=(12, 10))
+    
+    # Subplot 1: Number of valid opportunities
+    axes[0].bar(
+        predictions_2025.index.astype(str),
         predictions_2025['validated_count'],
         color='skyblue'
     )
-    plt.xlabel('User ID')
-    plt.ylabel('Number of Validated Opportunities')
-    plt.title('Predicted Validated Opportunities by User for 2025')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+    axes[0].set_xlabel('User ID')
+    axes[0].set_ylabel('Number of Validated Opportunities')
+    axes[0].set_title('Predicted Validated Opportunities by User for 2025')
+    axes[0].tick_params(axis='x', rotation=45)
 
-    # Save the chart
-    plt.savefig('predicted_valid_opportunities_2025.png', dpi=300)
-    logging.info("Bar chart for valid opportunities saved as 'predicted_valid_opportunities_2025.png'.")
-    plt.show()
-
-    # Visualization: Percentage of validated opportunities in 2025
-    plt.figure(figsize=(12, 6))
-    plt.bar(
-        predictions_2025.index.astype(str),  # Convert user_id to string explicitly
+    # Subplot 2: Percentage of valid opportunities
+    axes[1].bar(
+        predictions_2025.index.astype(str),
         predictions_2025['validation_percentage'],
         color='skyblue'
     )
-    plt.xlabel('User ID')
-    plt.ylabel('Validation Percentage (%)')
-    plt.title('Predicted Validation Percentage by User for 2025')
-    plt.xticks(rotation=45)
-    plt.ylim(0, 100)
-    plt.tight_layout()
+    axes[1].set_xlabel('User ID')
+    axes[1].set_ylabel('Validation Percentage (%)')
+    axes[1].set_title('Predicted Validation Percentage by User for 2025')
+    axes[1].set_ylim(0, 100)
+    axes[1].tick_params(axis='x', rotation=45)
 
-    # Save the chart
-    plt.savefig('predicted_validation_percentage_2025.png', dpi=300)
-    logging.info("Bar chart for validation percentage saved as 'predicted_validation_percentage_2025.png'.")
+    # Adjust layout and save
+    plt.tight_layout()
+    plt.savefig('predicted_opportunities_2025.png', dpi=300)
+    logging.info("Merged chart saved as 'predicted_opportunities_2025.png'.")
     plt.show()
 
 except Exception as e:
